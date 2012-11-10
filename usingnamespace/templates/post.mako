@@ -4,27 +4,22 @@
     <header>
         <!-- date published or updated -->
         <time pubdate datetime="${self.post_time_full(post)}">
-            <span class='time'>${post.date.strftime("%H:%M")}</span>
-            <span class='daymonth'><a href="/${post.date.strftime("%Y/%m/%d")}/">${post.date.strftime("%d")}</a> <abbr title="${post.date.strftime("%B")}"><a href="/${post.date.strftime("%Y/%m")}/">${post.date.strftime("%b")}</a></abbr></span>
-            <span class='year'><a href="/${post.date.strftime("%Y")}/">${post.date.strftime("%Y")}</a></span>
+            <span class='time'>${post.pubdate.strftime("%H:%M")}</span>
+            <span class='daymonth'><a href="/${post.pubdate.strftime("%Y/%m/%d")}/">${post.pubdate.strftime("%d")}</a> <abbr title="${post.pubdate.strftime("%B")}"><a href="/${post.pubdate.strftime("%Y/%m")}/">${post.pubdate.strftime("%b")}</a></abbr></span>
+            <span class='year'><a href="/${post.pubdate.strftime("%Y")}/">${post.pubdate.strftime("%Y")}</a></span>
         </time>
     </header>
     <section>
-    <h1><a href="${post.permapath()}">${post.title}</a></h1>
+    <h1><a href="${post.slug}">${post.current_revision.title}</a></h1>
     ${self.post_prose(post)}
     </section>
-    ${self.categories(post)}
-
-    % if comments is not None:
-        ${comments(post)}
-    % endif
 </article>
 
 <%def name="post_prose(post)">
-  ${post.content}
+  ${post.current_revision.entry}
 </%def>
 
-<%def name="post_time_full(post)">${post.date.isoformat()}</%def>
+<%def name="post_time_full(post)">${post.pubdate.isoformat()}</%def>
 
 <%def name="categories(post)">
     <ul class="categories">

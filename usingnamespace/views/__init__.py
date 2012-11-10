@@ -11,9 +11,8 @@ from ..models import (
 
 def home(request):
     # Get the latest 10 entries that are published
-    result = DBSession.query(Entry).filter(Entry.pubdate != None).order_by(Entry.pubdate.desc()).slice(0, 10).all()
+    posts = DBSession.query(Entry).filter(Entry.pubdate != None).order_by(Entry.pubdate.desc()).slice(0, 10).all()
 
-    print result
-    return {}
+    return {'posts': posts}
 
 

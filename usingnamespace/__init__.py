@@ -36,7 +36,8 @@ def add_routes(config):
     config.add_route('uns.management.posts', '/manage/posts/')
 
 def add_views(config):
-    config.add_view('usingnamespace.views.home', route_name='uns.home', renderer='site.mako')
+    config.add_view('usingnamespace.views.home', route_name='uns.home',
+            renderer='chronological.mako')
     config.add_view('usingnamespace.views.home', route_name='uns.home.pagenonum', renderer='site.mako')
 
     # Error pages
