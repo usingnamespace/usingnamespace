@@ -15,7 +15,7 @@ from ..models import *
 def usage(argv):
     cmd = os.path.basename(argv[0])
     print('usage: %s <config_uri>\n'
-          '(example: "%s development.ini")' % (cmd, cmd)) 
+          '(example: "%s development.ini")' % (cmd, cmd))
     sys.exit(1)
 
 def main(argv=sys.argv):
@@ -38,11 +38,11 @@ def main(argv=sys.argv):
 
         user = user.id
 
-    insert_new_rev_entry("one", "Post number 1", "one", user)
-    insert_new_rev_entry("two", "Post number 2", "two", user)
-    insert_new_rev_entry("three", "Post number 3", "three", user)
-    insert_new_rev_entry("four", "Post number 4", "four", user)
-    insert_new_rev_entry("five", "Post number 5", "five", user)
+    insert_new_rev_entry("one", "Post number 1", "one", user, published=True)
+    insert_new_rev_entry("two", "Post number 2", "two", user, published=True)
+    insert_new_rev_entry("three", "Post number 3", "three", user, published=True)
+    insert_new_rev_entry("four", "Post number 4", "four", user, published=True)
+    insert_new_rev_entry("five", "Post number 5", "five", user, published=True)
 
 def insert_new_rev_entry(title, entry, slug, user, published=False):
     with transaction.manager:
@@ -52,16 +52,23 @@ def insert_new_rev_entry(title, entry, slug, user, published=False):
         revision.title = title
         revision.entry = entry
 
-        DBSession.add(revision) 
+        DBSession.add(revision)
         DBSession.flush()
 
         entry = Entry()
-        entry.user_id = user
-        entry.rev_id = revision.id
-        entry.rev_num = revision.revision
+        entry.current_rev = revision.id
         entry.slug = slug
         if published:
-            entry.pubdate = datetime.now()
+            entry.pubdate = datetime.datetime.now()
 
         DBSession.add(entry)
         DBSession.flush()
+
+        author = EntryAuthors()
+        author.entry_id = entry.id
+        author.user_id = user
+        author.revision_id = revision.id
+
+        DBSession.add(entry)
+        DBSession.flush()
+
