@@ -272,6 +272,7 @@ article > header > time a:hover {
 }
 
 article > section {
+    min-height: 150px;
     text-align: justify;
 }
 
