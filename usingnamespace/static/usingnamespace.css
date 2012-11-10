@@ -1,0 +1,545 @@
+/*
+ * Copyright (c) 2012 Bert JW Regeer;
+ *
+ * CSS Reset from: Eric Meyer (http://meyerweb.com/eric/thoughts/2007/05/01/reset-reloaded/)
+ ***/
+
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+abbr, article, aside, audio, canvas, datalist, details,
+figure, footer, header, hgroup, mark, menu, meter, nav, output,
+progress, section, time, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    vertical-align: baseline;
+}
+
+body {
+    line-height: 1;
+    color: black;
+    background: white;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+caption, th, td {
+    text-align: left;
+    font-weight: normal;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: "";
+}
+
+blockquote, q {
+    quotes: "" "";
+}
+
+/* The HTML5 elements are not properly styled yet by browsers that are not aware of HTML5. */
+
+header, footer, nav, section, article, aside {
+    display: block; 
+}
+
+/* Implement the styles here */
+
+html {
+    height: 100%;
+    background: #eee;
+}
+
+body {
+    font-family: Verdana, 'Bitstream Vera Sans', sans-serif;
+    font-size: 13px;
+    min-width: 680px;
+    width: 80%;
+    margin: auto;
+    color: #000;
+    position: relative;
+    min-height: 100%;
+}
+
+body > header {
+    height: 60px;
+    padding-top: 10px;
+    padding-left: 500px;
+    padding-right: 10px;
+    background-color: #404040;
+    margin-left: -500px;
+    font-family: Menlo, Consolas, 'Andale Mono', Monaco, 'Liberation Mono', 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', monospace;
+}
+
+header h1 {
+    font-size: 2.5em;
+    color: #ee7b00;
+    font-weight: bold;
+}
+
+header h1 .nonname {
+    color: #afafaf;
+    font-weight: normal;
+}
+
+header h2 {
+    padding-top: 5px;
+    padding-left: 5em;
+    color: #afafaf;
+}
+
+#Mwrapper {
+    display: block;
+    border: 0;
+    margin: 0;
+    padding-left: 20%;
+    background: #fff;
+    -moz-box-shadow: inset 5px 5px 8px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 5px 5px 8px rgba(0, 0, 0, 0.3);
+    box-shadow-right: inset 5px 5px 8px rgba(0, 0, 0, 0.3);
+}
+
+#MainContent {	
+    padding: 10px 30px 0 0;
+}
+
+#MainContent ul.prevnext {
+    text-align: right;
+}
+
+#MainContent ul.prevnext li {
+    display: inline;
+}
+
+aside {
+    position: absolute;
+    top: 70px;
+    bottom: 0;
+    width: 20%;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    margin-left: -10000px;
+    padding-left: 10000px;
+    background-color: #404040;
+    border-right: 4px solid #ee7b00;
+    color: #cfcfcf;
+}
+
+aside > nav {
+    text-align: right;
+    font-size: 13px;
+    padding: 10px;
+    padding-right: 10px;
+    line-height: 19px;
+}
+
+nav > ul li h1 {
+    font-size: 1.3em;
+    line-height: 2.5;
+    text-transform: uppercase;
+    color: #afafaf;
+}
+
+nav > ul li a, header > h1 > a {
+    color: #ee7b00;
+    text-decoration: none;
+}
+
+nav > ul li a:visited, header > h1 > a:visited {
+    color: #ee7b00;
+    text-decoration: none;
+}
+
+nav > ul li a:hover {
+    color: #ee7b00;
+    background-color: #616161;
+}
+
+nav > ul li.current a {
+    color: #f64b00;
+    text-decoration: none;
+}
+
+footer {
+    clear: both;
+    width: 100%;
+    text-align: right;
+    padding-top: 15px;
+}
+
+footer > a {
+    color: #ee7b00;
+    text-decoration: none;
+}
+
+footer > a:visited {
+    color: #ee7b00;
+    text-decoration: none;
+}
+
+footer > a:hover {
+    color: #ee7b00;
+    background-color: #616161;
+}
+
+article, #Yearly, #generic {
+    margin-bottom: 1em;
+    line-height: 18px;
+
+    margin-left: 30px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    background: #eee;
+
+    -moz-box-shadow: 0 0 16px rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: 0 0 16px rgba(0, 0, 0, 0.4);
+    box-shadow-right: 0 0 16px rgba(0, 0, 0, 0.4);
+}
+
+article > header {
+    float: right;
+    margin: 0;
+    padding: 0;
+    margin-top: 40px;
+    margin-right: -20px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    height: 100%;
+}
+
+article > header > time {
+    display: block;
+    background: #fff;
+    width: 100%;
+    height: 100%;
+    color: #cfcfcf;
+    margin-top: 1px;
+    -moz-box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.3);
+    box-shadow-right: 5px 5px 8px rgba(0, 0, 0, 0.3);
+}
+
+article > header > time span {
+    background-color: rgba(40, 40, 40, 0.8);
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+article > header > time span.time {
+    padding-top: 10px;
+    display: block;
+    font-size: 1em;
+}
+
+article > header > time span.daymonth {
+    display: block;
+    font-size: 1.8em;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+}
+
+article > header > time span.year {
+    display: block;
+    font-size: 1.2em;
+    padding-bottom: 15px;
+}
+
+article > header > time a {
+    color: #cfcfcf;
+    text-decoration: none;
+}
+
+article > header > time a:hover {
+    text-decoration: underline;
+}
+
+article > section {
+    text-align: justify;
+}
+
+article > ul.categories {
+    clear: both;
+    text-align: right;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+ul.categories li, ul.prevnext li {
+    display: inline;
+    margin-left: 1em;
+}
+
+ul.categories li a, ul.prevnext li a, .monthly a {
+    color: #000;
+    text-decoration: underline;
+}
+
+ul.categories li a:hover, ul.prevnext li a:hover, .monthly a:hover {
+    color: #afafaf;
+    text-decoration: none;
+    background-color: #616161;
+}
+
+section a {
+    background-color: #afafaf;
+    color: #000;
+    text-decoration: none;
+}
+
+section a:visited {
+    color: #000;
+    text-decoration: underline;
+}
+
+section a:hover {
+    color: #afafaf;
+    background-color: #616161;
+    text-decoration: underline;
+}
+
+section a[rev="footnote"], section a[rel="footnote"] {
+    background-color: inherit;
+}
+
+section a[rel="footnote"] {
+    text-decoration: underline;
+}
+
+/* This is for the code highlighting sections */
+section div.codehilite, section div.linenodiv, section div.pygments_murphy {
+    margin-bottom: 15px;
+    max-height: 48em;
+    line-height: 1.2;
+    overflow: auto;
+    background: #fff;
+    padding: 10px 0 10px 20px;
+    clear: both;
+}
+
+section table.codehilitetable {
+    table-layout: fixed;
+    margin-bottom: 15px;
+    max-height: 48em;
+    line-height: 1.2;
+    overflow: auto;
+    padding: 10px 0 10px 5px;
+    background: #fff;
+    clear: both;
+    width: 100%;
+}
+
+section table.codehilitetable tbody {
+    display: block;
+    max-height: 48em;
+    overflow: auto;
+}
+
+section table.codehilitetable td.code {
+    width: 100%;
+}
+
+section table.codehilitetable td.linenos {
+    width: 2em;
+    min-width: 2em;
+    max-width: 4em;
+}
+
+section table.codehilitetable td div {
+    max-height: none;
+    padding: none;
+    margin-bottom: 0px;
+}
+
+section pre {
+    display: block;
+    height: auto;
+    color: #00bb00;
+    font-family: Menlo, Consolas, 'Andale Mono', Monaco, 'Liberation Mono', 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', monospace;
+    white-space: pre;
+}
+
+section code {
+    font-family: Menlo, Consolas, 'Andale Mono', Monaco, 'Liberation Mono', 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', monospace;
+    white-space: pre;
+}
+
+section p {
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 15px;
+}
+
+section h1, #Yearly h1, #generic h1 {
+    padding-left: 10px;
+    font-size: 150%;
+    line-height: 1.5;
+}
+
+section h2 {
+    padding-left: 10px;
+    font-size: 115%;
+    line-height: 1.5;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+section h3 {
+    padding-left: 10px;
+    font-weight: normal;
+    font-size: 110%;
+    line-height: 1.3;
+    margin-bottom: 10px;
+}
+
+section h4, section h5, section h6 {
+    padding-left: 10px;
+    font-size: 1em;
+    font-weight: bold;
+    line-height: 1.3;
+}
+
+section p + h1, section p + h2, section p + h3 {
+    margin-top: 10px;
+}
+
+section > ul, section > ol {
+    margin-left: 20px;
+}
+
+section ol {
+    list-style: inside;
+    list-style-type: decimal;
+    margin-bottom: 15px;
+    padding-right: 10px;
+    text-indent: -1em;
+    padding-left: 1em;
+}
+
+section ul {
+    margin-bottom: 5px;
+    list-style: inside;
+    list-style-type: disc;
+    margin-bottom: 15px;
+    padding-right: 10px;
+    text-indent: -1em;
+    padding-left: 1em;
+}
+
+section strong {
+    font-weight: bold;
+}
+
+section em {
+    font-style: italic;
+}
+
+/* Specialise the first h1 in a section, make it look like a title */
+
+section > h1:first-of-type, #Yearly > h1:first-of-type, #generic > h1:first-of-type {
+    padding-left: 0px;
+    background: #404040;
+    margin-bottom: 10px;
+    text-transform: capitalize;	
+    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+section h1:first-of-type a, #Yearly > h1:first-of-type a, #generic > h1:first-of-type a {
+    height: 40px;
+    line-height: 2;
+    color: #ee7b00;
+    background-color: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    padding: 0 0 0 10px;
+}
+
+section h1:first-of-type:hover, #Yearly > h1:first-of-type:hover, #generic > h1:first-of-type:hover {
+    background-color: #515151;
+}
+
+#social {
+    margin-left: 30px;
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 20px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#social div {
+    display: inline;
+    height: 15px;
+    padding-right: 10px;
+    text-align: center;
+    margin: auto;
+}
+
+/*
+ * Set up the different style for the yearly archives
+ */
+
+.monthly > h1 {
+    padding-left: 10px;
+    font-size: 1.2em;
+}
+
+.monthly > h2 {
+    padding-top: 10px;
+    font-size: 1.1em;
+    padding-left: 20px;
+    padding-bottom: 5px;
+}
+
+.monthly > ul {
+    padding: 0;
+    margin: 0;
+    padding-left: 50px;
+    margin-top: -1.85em;
+}
+
+.monthly > ul li:before {
+    content: "- ";
+}
+
+.monthly {
+    padding-bottom: 5px;
+}
+
+#Yearly .monthly:last-child {
+    padding-bottom: 10px;
+}
+
+
+/*
+ * Redifine stuff that was undefined at the top
+ */
+sup {
+    vertical-align: super;
+}
+
+blockquote {
+    margin-left: 30px;
+    border-left: 3px solid #369;
+    margin-right: 60px;
+}
