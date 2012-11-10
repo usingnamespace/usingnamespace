@@ -21,7 +21,7 @@
         </header>
         <div id="Mwrapper">
             <div id="MainContent">
-                % if hasattr(next.__class__, "body"):
+                % if hasattr(next, "body"):
                     ${next.body()}
                 % endif
             </div>
