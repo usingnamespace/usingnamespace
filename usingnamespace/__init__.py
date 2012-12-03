@@ -22,10 +22,17 @@ def main(global_config, **settings):
 def add_routes(config):
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('uns.home', '/')
-    config.add_route('uns.year.month.day.blog', '/{year:\d{4}}/{month:\d{2}}/{day:\d{2}}/{title}/')
+
+    # Set up the routes for "archive" urls. year/month/day
+    config.add_route('uns.year.month.day.title', '/{year:\d{4}}/{month:\d{2}}/{day:\d{2}}/{title}/')
     config.add_route('uns.year.month.day', '/{year:\d{4}}/{month:\d{2}}/{day:\d{2}}/')
     config.add_route('uns.year.month', '/{year:\d{4}}/{month:\d{2}}/')
     config.add_route('uns.year', '/{year:\d{4}}/')
+
+    # Set up routes for tags
+    config.add_route('uns.tag', '/tag/{tagname}/')
+    config.add_route('uns.tagnoname', '/tag/')
+    config.add_route('uns.tags', '/tags/')
 
     # Backwards compatible routes. Blogofile created these. May end up keeping them.
     config.add_route('uns.home.pagenonum', '/page/')
