@@ -31,6 +31,10 @@ from sqlalchemy.orm import (
         composite,
         )
 
+from sqlalchemy.ext.hybrid import (
+        hybrid_property,
+        )
+
 from sqlalchemy.ext.mutable import Mutable, MutableComposite
 
 class _date(object):
@@ -140,6 +144,32 @@ class Entry(Base):
     pubdate = composite(Date, 'year', 'month', 'day')
 
     _pubtime = __table__.c.pubtime
+
+    @property
+    def title(self):
+        return self.current_revision.title
+
+    @property
+    def tags(self):
+            return self.current_revision.tags
+
+    @property
+    def time(self):
+        if self.pubtime is not None:
+            return self.pubtime.strftime('%H:%M')
+        else:
+            return None
+
+    @hybrid_property
+    def pubtime(self):
+        return self._pubtime
+
+    @pubtime.setter
+    def pubtime(self, value):
+        if isinstance(value, datetime.datetime):
+            self._pubtime = value
+        else:
+            raise ValueError
 
 class EntryRevisions(Base):
     __table__ = Table('entry_revisions', Base.metadata,
