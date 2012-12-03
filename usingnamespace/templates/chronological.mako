@@ -1,6 +1,6 @@
 <%inherit file="site.mako" />
-% for post in posts:
-  <%include file="post.mako" args="post=post" />
+% for entry in entries:
+  <%include file="post.mako" args="post=entry" />
 % endfor
 <ul class="prevnext">
 % if prev_link:

@@ -4,13 +4,13 @@
     <header>
         <!-- date published or updated -->
         <time pubdate datetime="${self.post_time_full(post)}">
-            <span class='time'>${post.pubdate.strftime("%H:%M")}</span>
-            <span class='daymonth'><a href="/${post.pubdate.strftime("%Y/%m/%d")}/">${post.pubdate.strftime("%d")}</a> <abbr title="${post.pubdate.strftime("%B")}"><a href="/${post.pubdate.strftime("%Y/%m")}/">${post.pubdate.strftime("%b")}</a></abbr></span>
-            <span class='year'><a href="/${post.pubdate.strftime("%Y")}/">${post.pubdate.strftime("%Y")}</a></span>
+            <span class='time'>${post.time}</span>
+            <span class='daymonth'>${yearmonthdaylink(post, post.day)}</a> <abbr title="${post.pubdate.strftime("%B")}">${yearmonthlink(post, post.pubdate.strftime("%b"))}</a></abbr></span>
+            <span class='year'>${yearlink(post, post.year)}</a></span>
         </time>
     </header>
     <section>
-    <h1><a href="${post.slug}">${post.current_revision.title}</a></h1>
+    <h1>${permapath(post, post.current_revision.title)}</a></h1>
     ${self.post_prose(post)}
     </section>
 </article>
@@ -31,4 +31,20 @@
         % endif
     % endfor
     </ul>
+</%def>
+
+<%def name="yearlink(entry, text)">
+    <a href="${request.route_url('uns.year', year=entry.year)}">${text}</a>
+</%def>
+
+<%def name="yearmonthlink(entry, text)">
+    <a href="${request.route_url('uns.year.month', year=entry.year, month=entry.month)}">${text}</a>
+</%def>
+
+<%def name="yearmonthdaylink(entry, text)">
+    <a href="${request.route_url('uns.year.month.day', year=entry.year, month=entry.month, day=entry.day)}">${text}</a>
+</%def>
+
+<%def name="permapath(entry, text)">
+    <a href="${request.route_url('uns.year.month.day.title', year=entry.year, month=entry.month, day=entry.day, title=entry.slug)}">${text}</a>
 </%def>
