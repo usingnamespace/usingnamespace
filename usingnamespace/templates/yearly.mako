@@ -1,27 +1,34 @@
 <%inherit file="site.mako" />
+<%namespace name="entry_funcs" file="post.mako"/>
 <div id="Yearly">
-<h1><a href="/${year}/">Archive for ${year}</a></h1>
+<h1><% entry_funcs.yearlink(entries[0], "Archive for " + year) %></h1>
 
-% for ((monthnum, month), posts) in monthly: 
-    <% curday = 0; first = True %>
-    <div class="monthly">
-        <h1><a href="/${year}/${monthnum}/">${month}</a></h1>
-        % for post in posts:
-            <% postday = post.date.strftime("%d") %>
-            % if curday != postday:
-                % if first == False:
-                </ul>
-            % endif
-            <% curday = postday; first= False %>
-            <h2>${postday}</h2>
-            <ul>
-            % endif
-            <li><a href="${post.permapath()}">${post.title}</a></li>
-        % endfor
-    </ul>
-</div>
+<% curmonth = 0; curday = 0 %>
+% for entry in entries:
+    % if curmonth != entry.month:
+        % if curmonth != 0:
+        </div>
+        % endif
+        <% curmonth = entry.month; curday = 0 %>
+        <div class="monthly">
+            <h1><% entry_funcs.yearmonthlink(entry, entry.pubdate.strftime('%B')) %></a></h1>
+    % endif
+
+    % if curday != entry.day:
+        % if curday != 0:
+        </ul>
+        % endif
+        <% curday = entry.day %>
+        <h2>${curday}</h2>
+        <ul>
+    % endif
+
+    <li><% entry_funcs.permapath(entry, entry.title) %></a></li>
 % endfor
+        </ul>
+    </div>
 </div>
+
 
 <ul class="prevnext">
     % if prev_link:
