@@ -44,6 +44,7 @@ class Revision(Base):
     entry = deferred(__table__.c.entry)
 
     author = relationship("User")
+    tags = relationship("Tag", secondary="revision_tags")
 
 class Entry(Base):
     __table__ = Table('entries', Base.metadata,
@@ -78,3 +79,20 @@ class EntryAuthors(Base):
 
             PrimaryKeyConstraint('entry_id', 'user_id'),
             )
+
+class Tag(Base):
+    __table__ = Table('tags', Base.metadata,
+            Column('id', Integer, primary_key=True, index=True),
+            Column('tag', String(50), index=True),
+            Column('description', Text),
+            )
+
+class RevisionTags(Base):
+    __table__ = Table('revision_tags', Base.metadata,
+            Column('revision_id', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="CASCADE")),
+            Column('tag_id', ForeignKey('tags.id', onupdate="CASCADE", ondelete="CASCADE")),
+
+            PrimaryKeyConstraint('revision_id', 'tag_id'),
+            )
+
+

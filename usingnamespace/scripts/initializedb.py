@@ -38,37 +38,60 @@ def main(argv=sys.argv):
 
         user = user.id
 
-    insert_new_rev_entry("one", "Post number 1", "one", user, published=True)
-    insert_new_rev_entry("two", "Post number 2", "two", user, published=True)
-    insert_new_rev_entry("three", "Post number 3", "three", user, published=True)
-    insert_new_rev_entry("four", "Post number 4", "four", user, published=True)
-    insert_new_rev_entry("five", "Post number 5", "five", user, published=True)
+        tag1 = insert_new_tag("c++")
+        tag2 = insert_new_tag("c")
+        tag3 = insert_new_tag("database")
+        tag4 = insert_new_tag("testing")
+        tag5 = insert_new_tag("not used")
 
-def insert_new_rev_entry(title, entry, slug, user, published=False):
-    with transaction.manager:
-        revision = Revision()
-        revision.revision = 0
-        revision.user_id = user
-        revision.title = title
-        revision.entry = entry
+        insert_new_rev_entry("one", "Post number 1", "one", user, [tag1, tag2], published=True)
+        insert_new_rev_entry("two", "Post number 2", "two", user, [tag2, tag3], published=True)
+        insert_new_rev_entry("three", "Post number 3", "three", user, [tag4], published=False)
+        insert_new_rev_entry("four", "Post number 4", "four", user, [tag1], published=True)
+        insert_new_rev_entry("five", "Post number 5", "five", user, [], published=True)
 
-        DBSession.add(revision)
-        DBSession.flush()
 
-        entry = Entry()
-        entry.current_rev = revision.id
-        entry.slug = slug
-        if published:
-            entry.pubdate = datetime.datetime.now()
+def insert_new_rev_entry(title, entry, slug, user, tags, published=False):
+    revision = Revision()
+    revision.revision = 0
+    revision.user_id = user
+    revision.title = title
+    revision.entry = entry
 
-        DBSession.add(entry)
-        DBSession.flush()
+    DBSession.add(revision)
+    DBSession.flush()
 
-        author = EntryAuthors()
-        author.entry_id = entry.id
-        author.user_id = user
-        author.revision_id = revision.id
+    entry = Entry()
+    entry.current_rev = revision.id
+    entry.slug = slug
+    if published:
+        entry.pubdate = datetime.datetime.now()
 
-        DBSession.add(entry)
-        DBSession.flush()
+    DBSession.add(entry)
+    DBSession.flush()
 
+    author = EntryAuthors()
+    author.entry_id = entry.id
+    author.user_id = user
+    author.revision_id = revision.id
+
+    DBSession.add(entry)
+
+    for tag in tags:
+        tagforrev = RevisionTags()
+
+        tagforrev.revision_id = revision.id
+        tagforrev.tag_id = tag
+        DBSession.add(tagforrev)
+
+    DBSession.flush()
+
+def insert_new_tag(tagname):
+    tag = Tag()
+    tag.tag = tagname
+    tag.description = "Unknown"
+
+    DBSession.add(tag)
+    DBSession.flush()
+
+    return tag.id
