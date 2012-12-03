@@ -43,12 +43,21 @@ def add_routes(config):
     config.add_route('uns.management.posts', '/manage/posts/')
 
 def add_views(config):
-    config.add_view('usingnamespace.views.home', route_name='uns.home',
+    config.add_view('usingnamespace.views.home.home', route_name='uns.home',
             renderer='chronological.mako')
-    config.add_view('usingnamespace.views.home', route_name='uns.home.pagenonum', renderer='site.mako')
+    config.add_view('usingnamespace.views.home.redirhome',
+            route_name='uns.home.pagenonum')
+
+    config.add_view('usingnamespace.views.archive.article', route_name='uns.year.month.day.title', renderer='post.mako')
+    config.add_view('usingnamespace.views.archive.ymd_list', route_name='uns.year.month.day', renderer='chronological.mako')
+    config.add_view('usingnamespace.views.archive.ym_list', route_name='uns.year.month', renderer='chronological.mako')
+    config.add_view('usingnamespace.views.archive.y_list', route_name='uns.year', renderer='yearly.mako')
 
     # Error pages
     #config.add_view('usingnamespace.views.errors.db_failed', context=DBAPIError, renderer='db_failed.mako')
+
+    # Add a slash if the view has not been found.
+    config.add_notfound_view(append_slash=True)
 
 def add_events(config):
     pass
