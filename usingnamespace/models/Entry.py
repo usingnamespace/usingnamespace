@@ -10,8 +10,6 @@ from sqlalchemy import (
         Boolean,
         Column,
         DateTime,
-        Date,
-        Time,
         ForeignKey,
         ForeignKeyConstraint,
         Index,
@@ -21,9 +19,14 @@ from sqlalchemy import (
         String,
         Table,
         Text,
+        Time,
         UniqueConstraint,
+        extract,
+        sql,
         text,
         )
+
+from sqlalchemy.orm.properties import CompositeProperty
 
 from sqlalchemy.orm import (
         relationship,
@@ -37,37 +40,37 @@ from sqlalchemy.ext.hybrid import (
 
 from sqlalchemy.ext.mutable import Mutable, MutableComposite
 
-class _date(object):
-    def __get__(self, obj, type=None):
-        if obj is None:
-            return None
-        if obj.year is None:
-            return None
-        else:
-            datetime.date(obj.year, obj.month, obj.day)
+class PublishedDateTimeComparator(CompositeProperty.Comparator):
+    def __eq__(self, other):
+        """redefine the equals operator"""
 
-    def __set__(self, obj, value):
-        if value is None:
-            obj.year = obj.month = obj.day = None
-            return
+        if not isinstance(other, PublishedDateTime):
+            raise ValueError
 
-        obj.year = value.year
-        obj.month = value.month
-        obj.day = value.day
+        if isinstance(other, datetime.datetime):
+            other = PublishedDateTime(other.year, other.month, other.day, other.timetz())
 
-class Date(MutableComposite):
-    @classmethod
-    def coerce(cls, key, value):
-        if not isinstance(value, Date):
-            if isinstance(value, datetime.datetime):
-                return Date(value.year, value.month, value.day)
+        return sql.and_(*[a == b for a, b in
+                          zip(self.__clause_element__().clauses,
+                              other.__composite_values__())])
+    def __ne__(self, other):
+        """redefine the not equals operator"""
 
-            return MutableComposite.coerce(key, value)
-        else:
-            return value
+        if other is None:
+            return sql.and_(*[a != None for a in self.__clause_element__().clauses])
 
-    datetime  = _date()
-    def __init__(self, year, month, day):
+        return sql.and_(*[a != b for a, b in
+                        zip(self.__clause_element__().clauses,
+                            other.__composite_values__())])
+
+    def desc(self):
+        return sql.desc(', '.join(map(str, self.__clause_element__().clauses)))
+
+    def asc(self):
+        return sql.asc(', '.join(map(str, self.__clause_element__().clauses)))
+
+class PublishedDateTime(MutableComposite):
+    def __init__(self, year, month, day, time):
         if year is not None and month is not None and day is not None:
             try:
                 valid = datetime.date(year, month, day)
@@ -77,8 +80,12 @@ class Date(MutableComposite):
             self.year = year
             self.month = month
             self.day = day
+            self.time = time
         else:
             self.year = self.month = self.day = None
+
+    def getdatetime(self):
+        return datetime.datetime.combine(datetime.date(self.year, self.month, self.day), self.time)
 
     def __setattr__(self, key, value):
         # Set the attributes
@@ -88,16 +95,17 @@ class Date(MutableComposite):
         self.changed()
 
     def __composite_values__(self):
-        return self.year, self.month, self.day
+        return self.year, self.month, self.day, self.time
 
     def __repr__(self):
-        return u'<Date: year: %d month: %d day: %d>' % (self.year, self.month, self.day)
+        return u'<PublishedDateTime: year: %d month: %d day: %d time: %d>' % (self.year, self.month, self.day, self.time.strftime("%H:%M") if self.strftime is not None else None)
 
     def __eq__(self, other):
-        return isinstance(other, Date) and \
+        return isinstance(other, PublishedDateTime) and \
                 other.year == self.year and \
                 other.month == self.month and \
-                other.day == self.day
+                other.day == self.day and \
+                other.time == self.time
 
     def __ne__(self, other):
         return not self.__eq__(other)
@@ -132,7 +140,7 @@ class Entry(Base):
             Column('year', Integer(4), server_default=None, index=True, nullable=True),
             Column('month', Integer(2), server_default=None, index=True, nullable=True),
             Column('day', Integer(2), server_default=None, index=True, nullable=True),
-            Column('pubtime', Time, index=True, nullable=True),
+            Column('time', Time, nullable=True),
 
             UniqueConstraint('year', 'month', 'day', 'slug'),
             )
@@ -141,9 +149,8 @@ class Entry(Base):
     all_revisions = relationship("Revision", secondary="entry_revisions")
     authors = relationship("User", secondary="entry_authors")
 
-    pubdate = composite(Date, 'year', 'month', 'day')
-
-    _pubtime = __table__.c.pubtime
+    _time = __table__.c.time
+    _pubdate = composite(PublishedDateTime, 'year', 'month', 'day', '_time', comparator_factory=PublishedDateTimeComparator)
 
     @property
     def title(self):
@@ -155,21 +162,30 @@ class Entry(Base):
 
     @property
     def time(self):
-        if self.pubtime is not None:
-            return self.pubtime.strftime('%H:%M')
+        if self.pubdate is not None:
+            return self.pubdate.strftime("%H:%M")
         else:
             return None
 
     @hybrid_property
-    def pubtime(self):
-        return self._pubtime
+    def pubdate(self):
+        # Depending on the time, we may be some internal SQLAlchemy instance,
+        # or we may be our good ol' self PublishedDateTime. If we are the
+        # latter, we return a datetime object which is what most people are
+        # expecting anyway.
+        if isinstance(self._pubdate, PublishedDateTime):
+            return self._pubdate.getdatetime()
+        return self._pubdate
 
-    @pubtime.setter
-    def pubtime(self, value):
-        if isinstance(value, datetime.datetime):
-            self._pubtime = value
+    @pubdate.setter
+    def pubdate_set(self, value):
+        if not isinstance(value, Date):
+            if isinstance(value, datetime.datetime):
+                self._pubdate = PublishedDateTime(value.year, value.month, value.day, value.timetz())
+            else:
+                raise ValueError
         else:
-            raise ValueError
+            self._pubdate = value
 
 class EntryRevisions(Base):
     __table__ = Table('entry_revisions', Base.metadata,
