@@ -24,9 +24,9 @@ def add_routes(config):
     config.add_route('uns.home', '/')
 
     # Set up the routes for "archive" urls. year/month/day
-    config.add_route('uns.year.month.day.title', '/{year:\d{4}}/{month:\d{2}}/{day:\d{2}}/{title}/')
-    config.add_route('uns.year.month.day', '/{year:\d{4}}/{month:\d{2}}/{day:\d{2}}/')
-    config.add_route('uns.year.month', '/{year:\d{4}}/{month:\d{2}}/')
+    config.add_route('uns.year.month.day.title', '/{year:\d{4}}/{month:\d{2}}/{day:\d{2}}/{title}/', pregenerator=route_zero_extend_month_day)
+    config.add_route('uns.year.month.day', '/{year:\d{4}}/{month:\d{2}}/{day:\d{2}}/', pregenerator=route_zero_extend_month_day)
+    config.add_route('uns.year.month', '/{year:\d{4}}/{month:\d{2}}/', pregenerator=route_zero_extend_month_day)
     config.add_route('uns.year', '/{year:\d{4}}/')
 
     # Set up routes for tags
@@ -61,3 +61,11 @@ def add_views(config):
 
 def add_events(config):
     pass
+
+def route_zero_extend_month_day(request, elements, kw):
+    if 'day' in kw:
+        kw['day'] = "{0:02d}".format(kw['day'])
+    if 'month' in kw:
+        kw['month'] = "{0:02d}".format(kw['month'])
+
+    return elements, kw
