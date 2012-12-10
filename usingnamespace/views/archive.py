@@ -34,15 +34,24 @@ def article(request):
 def ymd_list(request):
     entries = _year_month_day_query(request.matchdict['year'], request.matchdict['month'], request.matchdict['day']).order_by(Entry.pubdate.desc()).all()
 
+    if len(entries) == 0:
+        raise HTTPNotFound()
+
     return {'entries': entries}
 
 def ym_list(request):
     entries = _year_month_query(request.matchdict['year'], request.matchdict['month']).order_by(Entry.pubdate.desc()).all()
 
+    if len(entries) == 0:
+        raise HTTPNotFound()
+
     return {'entries': entries}
 
 def y_list(request):
     entries = _year_query(request.matchdict['year']).order_by(Entry.pubdate.desc()).all()
+
+    if len(entries) == 0:
+        raise HTTPNotFound()
 
     return {'entries': entries,
             'year': request.matchdict['year']
