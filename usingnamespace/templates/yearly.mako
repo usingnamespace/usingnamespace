@@ -19,7 +19,7 @@
         </ul>
         % endif
         <% curday = entry.day %>
-        <h2>${curday}</h2>
+        <h2><% entry_funcs.yearmonthdaylink(entry, curday) %></h2>
         <ul>
     % endif
 
