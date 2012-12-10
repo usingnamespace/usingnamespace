@@ -60,7 +60,8 @@ def add_views(config):
     config.add_notfound_view('usingnamespace.views.errors.not_found', renderer='not_found.mako', append_slash=True)
 
 def add_events(config):
-    pass
+    config.add_subscriber('usingnamespace.events.view_helpers.view_helpers',
+            'pyramid.events.BeforeRender')
 
 def route_zero_extend_month_day(request, elements, kw):
     if 'day' in kw:

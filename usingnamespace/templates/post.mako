@@ -10,7 +10,7 @@
         </time>
     </header>
     <section>
-    <h1>${permapath(post, post.current_revision.title)}</a></h1>
+    <h1>${permapath(post, post.title)}</a></h1>
     ${self.post_prose(post)}
     </section>
 </article>
@@ -34,17 +34,17 @@
 </%def>
 
 <%def name="yearlink(entry, text)">
-    <a href="${request.route_url('uns.year', year=entry.year)}">${text}</a>
+    <a href="${h['url'].y_archive(entry)}">${text}</a>
 </%def>
 
 <%def name="yearmonthlink(entry, text)">
-    <a href="${request.route_url('uns.year.month', year=entry.year, month=entry.month)}">${text}</a>
+    <a href="${h['url'].ym_archive(entry)}">${text}</a>
 </%def>
 
 <%def name="yearmonthdaylink(entry, text)">
-    <a href="${request.route_url('uns.year.month.day', year=entry.year, month=entry.month, day=entry.day)}">${text}</a>
+    <a href="${h['url'].ymd_archive(entry)}">${text}</a>
 </%def>
 
 <%def name="permapath(entry, text)">
-    <a href="${request.route_url('uns.year.month.day.title', year=entry.year, month=entry.month, day=entry.day, title=entry.slug)}">${text}</a>
+    <a href="${h['url'].entry(entry)}">${text}</a>
 </%def>

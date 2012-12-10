@@ -1,7 +1,6 @@
 <%inherit file="site.mako" />
-<%namespace name="entry_funcs" file="post.mako"/>
 <div id="Yearly">
-<h1><% entry_funcs.yearlink(entries[0], "Archive for " + year) %></h1>
+    <h1><a href="${h['url'].y_archive(year)}">Archive for ${year}</a></h1>
 
 <% curmonth = 0; curday = 0 %>
 % for entry in entries:
@@ -11,7 +10,7 @@
         % endif
         <% curmonth = entry.month; curday = 0 %>
         <div class="monthly">
-            <h1><% entry_funcs.yearmonthlink(entry, entry.pubdate.strftime('%B')) %></a></h1>
+            <h1><a href="${h['url'].ym_archive(entry.year, curmonth)}">${entry.pubdate.strftime('%B')}</a></h1>
     % endif
 
     % if curday != entry.day:
@@ -19,11 +18,11 @@
         </ul>
         % endif
         <% curday = entry.day %>
-        <h2><% entry_funcs.yearmonthdaylink(entry, curday) %></h2>
+        <h2><a href="${h['url'].ymd_archive(entry.year, curmonth, curday)}">${curday}</a></h2>
         <ul>
     % endif
 
-    <li><% entry_funcs.permapath(entry, entry.title) %></a></li>
+    <li><a href="${h['url'].entry(entry)}">${entry.title}</a></li>
 % endfor
         </ul>
     </div>
@@ -31,14 +30,14 @@
 
 
 <ul class="prevnext">
-    % if prev_link:
-        <li><a href="${prev_link}">« Previous Year</a></li>
+    % if prev_year:
+        <li><a href="${h['url'].y_archive(prev_year)}">« Previous Year</a></li>
     % endif
-    % if next_link and prev_link:
+    % if next_year and prev_year:
         <li>•</li>
     % endif
-    % if next_link:
-        <li><a href="${next_link}">Next Year »</a></li>
+    % if next_year:
+        <li><a href="${h['url'].y_archive(next_year)}">Next Year »</a></li>
     % endif
 </ul>
 
