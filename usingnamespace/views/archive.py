@@ -1,6 +1,8 @@
 from pyramid.response import Response
 from pyramid.view import view_config
 
+from pyramid.httpexceptions import HTTPNotFound
+
 from sqlalchemy.orm import undefer
 from sqlalchemy.sql import extract
 
@@ -22,9 +24,12 @@ def _year_query(year):
     return DBSession.query(Entry).filter(Entry.year == year)
 
 def article(request):
-    print(request)
-    return {}
-    pass
+    entry = _year_month_day_query(request.matchdict['year'], request.matchdict['month'], request.matchdict['day']).filter(Entry.slug==request.matchdict['title']).first()
+
+    if entry is None:
+        raise HTTPNotFound()
+
+    return {'post': entry}
 
 def ymd_list(request):
     entries = _year_month_day_query(request.matchdict['year'], request.matchdict['month'], request.matchdict['day']).order_by(Entry.pubdate.desc()).all()

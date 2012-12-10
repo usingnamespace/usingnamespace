@@ -48,7 +48,7 @@ def add_views(config):
     config.add_view('usingnamespace.views.home.redirhome',
             route_name='uns.home.pagenonum')
 
-    config.add_view('usingnamespace.views.archive.article', route_name='uns.year.month.day.title', renderer='post.mako')
+    config.add_view('usingnamespace.views.archive.article', route_name='uns.year.month.day.title', renderer='permapage.mako')
     config.add_view('usingnamespace.views.archive.ymd_list', route_name='uns.year.month.day', renderer='chronological.mako')
     config.add_view('usingnamespace.views.archive.ym_list', route_name='uns.year.month', renderer='chronological.mako')
     config.add_view('usingnamespace.views.archive.y_list', route_name='uns.year', renderer='yearly.mako')
