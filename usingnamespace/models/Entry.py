@@ -29,9 +29,9 @@ from sqlalchemy import (
 from sqlalchemy.orm.properties import CompositeProperty
 
 from sqlalchemy.orm import (
-        relationship,
-        deferred,
         composite,
+        deferred,
+        relationship,
         )
 
 from sqlalchemy.ext.hybrid import (
