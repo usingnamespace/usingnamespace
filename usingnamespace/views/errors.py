@@ -7,3 +7,7 @@ def db_failed(request):
     request.response.status_int = 503
     return {}
 
+def not_found(request):
+    request.response.status_int = 404
+    return {}
+

@@ -57,7 +57,7 @@ def add_views(config):
     #config.add_view('usingnamespace.views.errors.db_failed', context=DBAPIError, renderer='db_failed.mako')
 
     # Add a slash if the view has not been found.
-    config.add_notfound_view(append_slash=True)
+    config.add_notfound_view('usingnamespace.views.errors.not_found', renderer='not_found.mako', append_slash=True)
 
 def add_events(config):
     pass
