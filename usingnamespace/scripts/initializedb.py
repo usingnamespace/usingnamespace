@@ -4,6 +4,7 @@ import transaction
 import datetime
 
 from sqlalchemy import engine_from_config
+from sqlalchemy.exc import IntegrityError
 
 from pyramid.paster import (
     get_appsettings,
@@ -27,28 +28,31 @@ def main(argv=sys.argv):
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
-    with transaction.manager:
-        user = User()
-        user.username = "xistence"
-        user.realname = "Bert JW Regeer"
-        user.credentials = "test"
+    try:
+        with transaction.manager:
+            user = User()
+            user.username = "xistence"
+            user.realname = "Bert JW Regeer"
+            user.credentials = "test"
 
-        DBSession.add(user)
-        DBSession.flush()
+            DBSession.add(user)
+            DBSession.flush()
 
-        user = user.id
+            user = user.id
 
-        tag1 = insert_new_tag("c++")
-        tag2 = insert_new_tag("c")
-        tag3 = insert_new_tag("database")
-        tag4 = insert_new_tag("testing")
-        tag5 = insert_new_tag("not used")
+            tag1 = insert_new_tag("c++")
+            tag2 = insert_new_tag("c")
+            tag3 = insert_new_tag("database")
+            tag4 = insert_new_tag("testing")
+            tag5 = insert_new_tag("not used")
 
-        insert_new_rev_entry("one", "Post number 1", "one", user, [tag1, tag2], published=True)
-        insert_new_rev_entry("two", "Post number 2", "two", user, [tag2, tag3], published=True)
-        insert_new_rev_entry("three", "Post number 3", "three", user, [tag4], published=False)
-        insert_new_rev_entry("four", "Post number 4", "four", user, [tag1], published=True)
-        insert_new_rev_entry("five", "Post number 5", "five", user, [], published=True)
+            insert_new_rev_entry("one", "Post number 1", "one", user, [tag1, tag2], published=True)
+            insert_new_rev_entry("two", "Post number 2", "two", user, [tag2, tag3], published=True)
+            insert_new_rev_entry("three", "Post number 3", "three", user, [tag4], published=False)
+            insert_new_rev_entry("four", "Post number 4", "four", user, [tag1], published=True)
+            insert_new_rev_entry("five", "Post number 5", "five", user, [], published=True)
+    except IntegrityError:
+        pass
 
 
 def insert_new_rev_entry(title, entry, slug, user, tags, published=False):
