@@ -9,13 +9,19 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 requires = [
     'pyramid',
     'SQLAlchemy',
+    'psycopg2',
     'transaction',
     'pyramid_tm',
     'pyramid_debugtoolbar',
-    'pyramid_simpleform',
+    'pyramid_deform',
     'zope.sqlalchemy',
     'mako',
     'waitress',
+    'cryptacular',
+    'misaka',
+    'deform',
+    'deform_bootstrap',
+    'pyramid_mailer',
     ]
 
 setup(name='usingnamespace',
@@ -41,8 +47,8 @@ setup(name='usingnamespace',
       [paste.app_factory]
       main = usingnamespace:main
       [console_scripts]
-      initialize_usingnamespace_db = usingnamespace.scripts.initializedb:main
-      destroy_usingnamespace_db = usingnamespace.scripts.destroydb:main
+      usingnamespace_init_db = usingnamespace.scripts.initializedb:main
+      usingnamespace_destroy_db = usingnamespace.scripts.destroydb:main
       """,
       )
 
