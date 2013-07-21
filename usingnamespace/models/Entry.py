@@ -179,7 +179,7 @@ class Entry(Base):
 
     @pubdate.setter
     def pubdate_set(self, value):
-        if not isinstance(value, Date):
+        if not isinstance(value, PublishedDateTime):
             if isinstance(value, datetime.datetime):
                 self._pubdate = PublishedDateTime(value.year, value.month, value.day, value.timetz())
             else:
