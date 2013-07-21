@@ -22,6 +22,8 @@ requires = [
     'deform',
     'deform_bootstrap',
     'pyramid_mailer',
+    'nose',
+    'coverage',
     ]
 
 setup(name='usingnamespace',
