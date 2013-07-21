@@ -3,30 +3,35 @@ import transaction
 
 from pyramid import testing
 
-from ..models import DBSession
+from ..models import *
 
-class TestMyView(unittest.TestCase):
-    def setUp(self):
-        self.config = testing.setUp()
-        from sqlalchemy import create_engine
-        engine = create_engine('sqlite://')
-        from .models import (
-            Base,
-            MyModel,
-            )
-        DBSession.configure(bind=engine)
-        Base.metadata.create_all(engine)
-        with transaction.manager:
-            model = MyModel(name='one', value=55)
-            DBSession.add(model)
+from pyramid.paster import (
+    get_appsettings,
+    setup_logging,
+    )
 
-    def tearDown(self):
-        DBSession.remove()
-        testing.tearDown()
+from pyramid.config import Configurator
+from paste.deploy.loadwsgi import appconfig
+from sqlalchemy import engine_from_config
+from sqlalchemy.orm import sessionmaker
+import os
 
-    def test_it(self):
-        from .views import my_view
-        request = testing.DummyRequest()
-        info = my_view(request)
-        self.assertEqual(info['one'].name, 'one')
-        self.assertEqual(info['project'], 'usingnamespace')
+ROOT_PATH = os.path.dirname(__file__)
+CONFIG_PATH = os.path.join(ROOT_PATH, '..', '..', 'config', 'test.ini')
+setup_logging(CONFIG_PATH)
+from meta import settings
+
+def setup():
+    engine = engine_from_config(settings, prefix='sqlalchemy.')
+
+    config = Configurator(settings=settings)
+    DBSession.configure(bind=engine)
+    Base.metadata.create_all(engine)
+
+def teardown():
+    engine = engine_from_config(settings, prefix='sqlalchemy.')
+
+    DBSession.configure(bind=engine)
+    Base.metadata.drop_all(engine)
+
+
