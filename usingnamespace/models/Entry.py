@@ -128,6 +128,7 @@ class Revision(Base):
     entry = deferred(__table__.c.entry)
 
     author = relationship("User")
+    entry_rendered = relationship("RevisionRendered")
     tags = relationship("Tag", secondary="revision_tags")
 
 class Entry(Base):
@@ -143,6 +144,8 @@ class Entry(Base):
             Column('time', Time, nullable=True),
 
             UniqueConstraint('year', 'month', 'day', 'slug'),
+            Index('idx_year_month_day', 'year', 'month', 'day'),
+            Index('idx_year_month', 'year', 'month'),
             )
 
     current_revision = relationship("Revision", lazy="joined")
@@ -155,6 +158,10 @@ class Entry(Base):
     @property
     def title(self):
         return self.current_revision.title
+
+    @property
+    def entry(self):
+        return self.current_revision.entry_rendered
 
     @property
     def tags(self):
@@ -186,6 +193,12 @@ class Entry(Base):
                 raise ValueError
         else:
             self._pubdate = value
+
+class RevisionRendered(Base):
+    __table__ = Table('revision_rendered', Base.metadata,
+            Column('revision_id', Integer, ForeignKey('revisions.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key=True),
+            Column('entry', Text, nullable=False),
+            )
 
 class EntryRevisions(Base):
     __table__ = Table('entry_revisions', Base.metadata,

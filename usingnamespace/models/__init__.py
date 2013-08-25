@@ -7,4 +7,5 @@ from Entry import EntryAuthors
 from Entry import EntryRevisions
 from Entry import Tag
 from Entry import RevisionTags
+from Entry import RevisionRendered
 from User import User
