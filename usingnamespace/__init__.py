@@ -9,6 +9,11 @@ from sqlalchemy.exc import DBAPIError
 
 from models import DBSession
 
+required_settings = [
+        'pyramid.secret.session',
+        'pyramid.secret.auth',
+        'usingnamespace.upload_path',
+        ]
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -16,7 +21,18 @@ def main(global_config, **settings):
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     config = Configurator(settings=settings)
-    config.set_session_factory(UnencryptedCookieSessionFactoryConfig(settings['pyramid.secretcookie']))
+
+    do_start = True
+
+    for _req in required_settings:
+        if _req not in settings:
+            log.error('{} is not set in configuration file.'.format(_req))
+            do_start = False
+
+    if do_start is False:
+        log.error('Unable to start due to missing configuration')
+        exit(-1)
+
     config.include(add_routes)
     config.include(add_views)
     config.include(add_events)
