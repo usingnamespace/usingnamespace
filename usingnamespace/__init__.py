@@ -3,6 +3,8 @@ log = logging.getLogger(__name__)
 
 from pyramid.config import Configurator
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
+from pyramid.authentication import AuthTktAuthenticationPolicy
+from pyramid.authorization import ACLAuthorizationPolicy
 
 from sqlalchemy import engine_from_config
 from sqlalchemy.exc import DBAPIError
@@ -32,6 +34,30 @@ def main(global_config, **settings):
     if do_start is False:
         log.error('Unable to start due to missing configuration')
         exit(-1)
+
+    # Create the session factory, we are using the stock one
+    _session_factory = UnencryptedCookieSessionFactoryConfig(
+            settings['pyramid.secret.session'],
+            cookie_httponly=True,
+            cookie_max_age=864000
+            )
+
+    # Create the authentication policy, we are using a stock one
+    _authn_policy = AuthTktAuthenticationPolicy(
+            settings['pyramid.secret.auth'],
+            max_age=864000,
+            http_only=True,
+            debug=True,
+            hashalg='sha512',
+            callback=lambda x, y: 0,
+            )
+
+    # The stock standard authorization policy will suffice for our needs
+    _authz_policy = ACLAuthorizationPolicy()
+
+    config.set_session_factory(_session_factory)
+    config.set_authentication_policy(_authn_policy)
+    config.set_authorization_policy(_authz_policy)
 
     config.include(add_routes)
     config.include(add_views)
