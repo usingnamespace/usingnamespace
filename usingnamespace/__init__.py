@@ -66,6 +66,9 @@ def main(global_config, **settings):
     # Set-up deform so that it uses bootstrap
     config.include('deform_bootstrap')
 
+    # Add in pyramid_mailer for sending out emails
+    config.include('pyramid_mailer')
+
     return config.make_wsgi_app()
 
 def add_routes(config):
