@@ -7,23 +7,26 @@ README = open(os.path.join(here, 'README.txt')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
-    'pyramid',
     'SQLAlchemy',
-    'psycopg2',
-    'transaction',
-    'pyramid_tm',
+    'mako',
+    'pyramid',
     'pyramid_debugtoolbar',
     'pyramid_deform',
-    'zope.sqlalchemy',
-    'mako',
+    'pyramid_mailer',
+    'pyramid_tm',
+    'transaction',
     'waitress',
+    'zope.sqlalchemy',
+
     'cryptacular',
-    'misaka',
     'deform',
     'deform_bootstrap',
-    'pyramid_mailer',
+    'misaka',
+    'psycopg2',
+    'pyramid_deform',
+
+    'coverage'
     'nose',
-    'coverage',
     ]
 
 setup(name='usingnamespace',
