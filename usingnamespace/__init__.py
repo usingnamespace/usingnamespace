@@ -1,11 +1,14 @@
-from pyramid.config import Configurator
-from sqlalchemy import engine_from_config
+import logging
+log = logging.getLogger(__name__)
 
+from pyramid.config import Configurator
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
+
+from sqlalchemy import engine_from_config
+from sqlalchemy.exc import DBAPIError
 
 from models import DBSession
 
-from sqlalchemy.exc import DBAPIError
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
