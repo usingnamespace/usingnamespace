@@ -62,10 +62,17 @@ def main(global_config, **settings):
     config.include(add_routes)
     config.include(add_views)
     config.include(add_events)
+
+    # Set-up deform so that it uses bootstrap
+    config.include('deform_bootstrap')
+
     return config.make_wsgi_app()
 
 def add_routes(config):
     config.add_static_view('static', 'static', cache_max_age=3600)
+    config.add_static_view('deform_static', 'deform:static', cache_max_age=3600)
+    config.add_static_view('files', config.registry.settings['usingnamespace.upload_path'], cache_max_age=3600)
+
     config.add_route('uns.home', '/')
 
     # Set up the routes for "archive" urls. year/month/day
