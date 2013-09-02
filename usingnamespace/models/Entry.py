@@ -142,6 +142,7 @@ class Entry(Base):
             Column('month', Integer(2), server_default=None, index=True, nullable=True),
             Column('day', Integer(2), server_default=None, index=True, nullable=True),
             Column('time', Time, nullable=True),
+            Column('domain_id', Integer, ForeignKey('domains.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
 
             UniqueConstraint('year', 'month', 'day', 'slug'),
             Index('idx_year_month_day', 'year', 'month', 'day'),

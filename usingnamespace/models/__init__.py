@@ -13,3 +13,7 @@ from Entry import (
         )
 
 from User import User
+
+from Domain import (
+            Domain,
+        )
