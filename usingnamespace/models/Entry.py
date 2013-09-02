@@ -221,7 +221,7 @@ class EntryAuthors(Base):
 class Tag(Base):
     __table__ = Table('tags', Base.metadata,
             Column('id', Integer, primary_key=True, index=True),
-            Column('tag', String(50), index=True),
+            Column('tag', String(50), index=True, unique=True),
             Column('description', Text),
             )
 
