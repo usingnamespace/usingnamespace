@@ -13,6 +13,32 @@ from pyramid.paster import (
 
 from ..models import *
 
+defaults = {
+            'users': [
+                (u'xistence', 'Bert JW Regeer', 'test')
+                ],
+            'tags': [
+                (u'c++', "The C++ programming language"),
+                (u'c', "The C progrmaming langauge"),
+                (u'database', "Databases store stuff"),
+                (u'testing', "Not sure..."),
+                (u'not used', "Don't look at me that way"),
+                ],
+            'domains': [
+                (u'test.alexandra.network.lan', "xistence"),
+                (u'whatever.alexandra.network.lan', "xistence"),
+                ],
+            'entries': [
+                # Title, entry, slug, user, tags, published
+                (u'one', u'Post number 1', 'one', 1, ["c++", "c"], u'test.alexandra.network.lan', True),
+                (u'two', u'Post number 2', 'two', 1, ["database", "testing"], u'test.alexandra.network.lan', True),
+                (u'three', u'Post number 3', 'three', 1, ["c++", "database"], u'whatever.alexandra.network.lan', True),
+                (u'four', u'Post number 4', 'four', 1, ["testing", "c"], u'whatever.alexandra.network.lan', True),
+                (u'five', u'Post number 5', 'five', 1, ["c++", "c", "database"], u'test.alexandra.network.lan', True),
+                (u'No tags', u'This post has no tags', 'no-tags', 1, [], u'whatever.alexandra.network.lan', True),
+                ],
+        }
+
 def usage(argv):
     cmd = os.path.basename(argv[0])
     print('usage: %s <config_uri>\n'
@@ -28,46 +54,62 @@ def main(argv=sys.argv):
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
-    try:
-        with transaction.manager:
-            user = User()
-            user.username = "xistence"
-            user.realname = "Bert JW Regeer"
-            user.credentials = "test"
 
-            DBSession.add(user)
-            DBSession.flush()
+    with transaction.manager:
+        for (u, r, c) in defaults['users']:
+            sp = transaction.savepoint()
+            try:
+                user = User(username=u, realname=r, credentials=c)
+                DBSession.add(user)
+                DBSession.flush()
+            except IntegrityError:
+                sp.rollback()
+                print 'Username "{}" already exists.'.format(u)
 
-            user = user.id
+        for (t, d) in defaults['tags']:
+            sp = transaction.savepoint()
+            try:
+                tag = Tag(tag = t, description = d)
+                DBSession.add(tag)
+                DBSession.flush()
+            except IntegrityError:
+                sp.rollback()
+                print 'Tag "{}" already exists.'.format(t)
 
-            tag1 = insert_new_tag("c++")
-            tag2 = insert_new_tag("c")
-            tag3 = insert_new_tag("database")
-            tag4 = insert_new_tag("testing")
-            tag5 = insert_new_tag("not used")
+        for (d, o) in defaults['domains']:
+            sp = transaction.savepoint()
+            try:
+                domain = Domain(domain = d, owner = DBSession.query(User).filter(User.username == o).first().id)
+                DBSession.add(domain)
+                DBSession.flush()
+            except IntegrityError:
+                print e
+                sp.rollback()
+                print 'Domain "{}" already exists.'.format(d)
 
-            insert_new_rev_entry("one", "Post number 1", "one", user, [tag1, tag2], published=True)
-            insert_new_rev_entry("two", "Post number 2", "two", user, [tag2, tag3], published=True)
-            insert_new_rev_entry("three", "Post number 3", "three", user, [tag4], published=False)
-            insert_new_rev_entry("four", "Post number 4", "four", user, [tag1], published=True)
-            insert_new_rev_entry("five", "Post number 5", "five", user, [], published=True)
-    except IntegrityError:
-        pass
+        for (t, e, s, u, ta, d, p) in defaults['entries']:
+            sp = transaction.savepoint()
+            try:
+                insert_new_rev_entry(t, e, s, u, ta, d, published=p)
+            except IntegrityError:
+                sp.rollback()
+                print 'Entry "{}" already exists.'.format(t)
 
 
-def insert_new_rev_entry(title, entry, slug, user, tags, published=False):
+def insert_new_rev_entry(title, entry, slug, user, tags, domain, published=False):
     revision = Revision()
     revision.revision = 0
     revision.user_id = user
     revision.title = title
     revision.entry = entry
 
+    for tag in tags:
+        revision.tags.append(DBSession.query(Tag).filter(Tag.tag == tag).first())
+
     DBSession.add(revision)
     DBSession.flush()
 
-    entry = Entry()
-    entry.current_rev = revision.id
-    entry.slug = slug
+    entry = Entry(current_rev = revision.id, slug = slug, domain_id = DBSession.query(Domain).filter(Domain.domain == domain).first().id)
     if published:
         entry.pubdate = datetime.datetime.now()
 
@@ -80,22 +122,4 @@ def insert_new_rev_entry(title, entry, slug, user, tags, published=False):
     author.revision_id = revision.id
 
     DBSession.add(entry)
-
-    for tag in tags:
-        tagforrev = RevisionTags()
-
-        tagforrev.revision_id = revision.id
-        tagforrev.tag_id = tag
-        DBSession.add(tagforrev)
-
     DBSession.flush()
-
-def insert_new_tag(tagname):
-    tag = Tag()
-    tag.tag = tagname
-    tag.description = "Unknown"
-
-    DBSession.add(tag)
-    DBSession.flush()
-
-    return tag.id
