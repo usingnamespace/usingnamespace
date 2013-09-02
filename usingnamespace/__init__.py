@@ -76,37 +76,12 @@ def add_routes(config):
     config.add_static_view('deform_static', 'deform:static', cache_max_age=3600)
     config.add_static_view('files', config.registry.settings['usingnamespace.upload_path'], cache_max_age=3600)
 
-    config.add_route('uns.home', '/')
 
-    # Set up the routes for "archive" urls. year/month/day
-    config.add_route('uns.year.month.day.title', '/{year:\d{4}}/{month:\d{2}}/{day:\d{2}}/{title}/', pregenerator=route_zero_extend_month_day)
-    config.add_route('uns.year.month.day', '/{year:\d{4}}/{month:\d{2}}/{day:\d{2}}/', pregenerator=route_zero_extend_month_day)
-    config.add_route('uns.year.month', '/{year:\d{4}}/{month:\d{2}}/', pregenerator=route_zero_extend_month_day)
-    config.add_route('uns.year', '/{year:\d{4}}/')
 
-    # Set up routes for tags
-    config.add_route('uns.tag', '/tag/{tagname}/')
-    config.add_route('uns.tagnoname', '/tag/')
-    config.add_route('uns.tags', '/tags/')
 
-    # Backwards compatible routes. Blogofile created these. May end up keeping them.
-    config.add_route('uns.home.pagenonum', '/page/')
-    config.add_route('uns.home.page', '/page/{num:\d+}/')
 
-    # Management routes
-    config.add_route('uns.management', '/manage/')
-    config.add_route('uns.management.posts', '/manage/posts/')
 
 def add_views(config):
-    config.add_view('usingnamespace.views.home.home', route_name='uns.home',
-            renderer='chronological.mako')
-    config.add_view('usingnamespace.views.home.redirhome',
-            route_name='uns.home.pagenonum')
-
-    config.add_view('usingnamespace.views.archive.article', route_name='uns.year.month.day.title', renderer='permapage.mako')
-    config.add_view('usingnamespace.views.archive.ymd_list', route_name='uns.year.month.day', renderer='chronological.mako')
-    config.add_view('usingnamespace.views.archive.ym_list', route_name='uns.year.month', renderer='chronological.mako')
-    config.add_view('usingnamespace.views.archive.y_list', route_name='uns.year', renderer='yearly.mako')
 
     # Error pages
     #config.add_view('usingnamespace.views.errors.db_failed', context=DBAPIError, renderer='db_failed.mako')
