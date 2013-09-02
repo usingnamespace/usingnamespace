@@ -1,7 +1,10 @@
 import logging
 log = logging.getLogger(__name__)
 
-from pyramid.config import Configurator
+from pyramid.config import (
+        Configurator,
+        not_,
+        )
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
@@ -85,26 +88,16 @@ def add_routes(config):
     config.add_static_view('deform_static', 'deform:static', cache_max_age=3600)
     config.add_static_view('files', config.registry.settings['usingnamespace.upload_path'], cache_max_age=3600)
 
-    def not_management(info, request):
-        host = request.host if ":" not in request.host else request.host.split(":")[0]
-
-        if config.registry.settings['usingnamespace.management.domain'] != host:
-            log.debug("Management is not request.host: {}".format(host))
-            return True
-        else:
-            return False
-
     def management(info, request):
-        host = request.host if ":" not in request.host else request.host.split(":")[0]
-
-        if config.registry.settings['usingnamespace.management.domain'] == host:
-            log.debug("Management is request.host: {}".format(host))
+        if config.registry.settings['usingnamespace.management.domain'] == request.domain:
+            log.debug("Management is request.host: {}".format(request.domain))
             return True
         else:
+            log.debug("This is not a management domain: {}".format(request.domain))
             return False
 
     # Used so that in the future we can set up a route for the management interface seperately
-    config.add_route('main', '/*traverse', use_global_views=True, custom_predicates=(not_management,))
+    config.add_route('main', '/*traverse', use_global_views=True, custom_predicates=(not_(management),))
     config.add_route('management', '/*traverse', use_global_views=False, custom_predicates=(management,))
 
 def add_views(config):
