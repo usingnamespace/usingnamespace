@@ -18,7 +18,3 @@ def home(request):
 
     return {'entries': entries}
 
-def redirhome(request):
-    url = request.route_url('uns.home')
-    return HTTPMovedPermanently(location=url)
-
