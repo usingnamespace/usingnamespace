@@ -25,7 +25,7 @@ requires = [
     'psycopg2',
     'pyramid_deform',
 
-    'coverage'
+    'coverage',
     'nose',
     ]
 
