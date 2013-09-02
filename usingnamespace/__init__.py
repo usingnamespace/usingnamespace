@@ -22,7 +22,7 @@ def main(global_config, **settings):
     """
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
-    config = Configurator(settings=settings)
+    config = Configurator(settings=settings, root_factory='.traversal.MainRoot')
 
     do_start = True
 
