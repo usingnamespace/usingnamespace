@@ -70,6 +70,14 @@ def main(global_config, **settings):
     # Add in pyramid_mailer for sending out emails
     config.include('pyramid_mailer')
 
+
+    def cur_domain(request):
+        host = request.host if ":" not in request.host else request.host.split(":")[0]
+
+        return host
+
+    config.set_request_property(cur_domain, 'domain', reify=True)
+
     return config.make_wsgi_app()
 
 def add_routes(config):
