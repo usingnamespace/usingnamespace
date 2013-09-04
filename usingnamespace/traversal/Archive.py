@@ -7,7 +7,7 @@ from zope.interface import implementer
 from Entry import Entry
 
 class IArchive(Interface):
-    pass
+    """Marker interface for archive contexts"""
 
 @implementer(IArchive)
 class ArchiveYear(object):
