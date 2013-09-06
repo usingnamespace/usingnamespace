@@ -8,17 +8,18 @@ from sqlalchemy import (
         Boolean,
         Column,
         ForeignKey,
-        Table,
         Integer,
-        Unicode,
         PrimaryKeyConstraint,
+        String,
+        Table,
+        Unicode,
         UniqueConstraint,
         )
 
 class Domain(Base):
     __table__ = Table('domains', Base.metadata,
             Column('id', Integer, primary_key=True, index=True),
-            Column('domain', Unicode(256), index=True, unique=True),
+            Column('domain', String(256), index=True, unique=True),
             Column('owner', Integer, ForeignKey('users.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
             )
 
