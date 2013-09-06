@@ -1,7 +1,7 @@
 import logging
 log = logging.getLogger(__name__)
 
-class Entry(object):
+class SingleEntry(object):
     """The leaf node for an entry"""
 
     def __init__(self, slug):

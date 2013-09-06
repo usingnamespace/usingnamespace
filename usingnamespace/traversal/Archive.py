@@ -4,7 +4,7 @@ log = logging.getLogger(__name__)
 from zope.interface import Interface
 from zope.interface import implementer
 
-from Entry import Entry
+from .Entry import SingleEntry as Entry_ctx
 
 from ..models import (
             Entry,
@@ -220,7 +220,7 @@ class ArchiveYearMonthDay(object):
 
         # Last resort, see if it is a valid slug
         try:
-            next_ctx = Entry(key)
+            next_ctx = Entry_ctx(key)
         except ValueError:
             next_ctx = None
 

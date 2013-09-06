@@ -10,7 +10,7 @@ from Archive import (
         )
 
 from Entry import (
-        Entry,
+        SingleEntry,
         )
 
 from ..models import (
