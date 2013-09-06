@@ -88,10 +88,8 @@ class ArchiveYear(object):
             # ValueError
             first = self.entries.first()
 
-            if first is not None:
-                return None
-            else:
-                return ValueError
+            if first is None:
+                raise ValueError
 
 @implementer(IArchive)
 class ArchiveYearMonth(object):
@@ -171,10 +169,8 @@ class ArchiveYearMonth(object):
             # ValueError
             first = self.entries.first()
 
-            if first is not None:
-                return None
-            else:
-                return ValueError
+            if first is None:
+                raise ValueError
 
 @implementer(IArchive)
 class ArchiveYearMonthDay(object):
@@ -254,7 +250,5 @@ class ArchiveYearMonthDay(object):
             # ValueError
             first = self.entries.first()
 
-            if first is not None:
-                return None
-            else:
-                return ValueError
+            if first is None:
+                raise ValueError
