@@ -73,7 +73,6 @@ def main(global_config, **settings):
     # Add in pyramid_mailer for sending out emails
     config.include('pyramid_mailer')
 
-
     def cur_domain(request):
         host = request.host if ":" not in request.host else request.host.split(":")[0]
 
@@ -101,11 +100,8 @@ def add_routes(config):
     config.add_route('management', '/*traverse', use_global_views=False, custom_predicates=(management,))
 
 def add_views(config):
-    config.add_view(
-            '.views.home.home',
-            context='.traversal.MainRoot',
-            renderer='chronological.mako'
-            )
+    # Scan the views sub-module
+    config.scan('.views')
 
     # Error pages
     #config.add_view('usingnamespace.views.errors.db_failed', context=DBAPIError, renderer='db_failed.mako')
