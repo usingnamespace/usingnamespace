@@ -78,7 +78,7 @@ class ArchiveYear(object):
 
             # Get the entries variable from the parent
             self.entries = self.__parent__.entries
-            self.entries.filter(Entry.year == self.year)
+            self.entries = self.entries.filter(Entry.year == self.year)
         else:
             # We need a parent ...
             raise ValueError
@@ -161,7 +161,7 @@ class ArchiveYearMonth(object):
 
             # Get the entries variable from the parent
             self.entries = self.__parent__.entries
-            self.entries.filter(Entry.month == self.month)
+            self.entries = self.entries.filter(Entry.month == self.month)
         else:
             # We need a parent ...
             raise ValueError
@@ -244,7 +244,7 @@ class ArchiveYearMonthDay(object):
 
             # Get the entries variable from the parent
             self.entries = self.__parent__.entries
-            self.entries.filter(Entry.day == self.day)
+            self.entries = self.entries.filter(Entry.day == self.day)
         else:
             # We need a parent ...
             raise ValueError
