@@ -6,12 +6,19 @@ from zope.interface import implementer
 
 from Entry import Entry
 
+from ..models import (
+            Entry,
+        )
+
 class IArchive(Interface):
     """Marker interface for archive contexts"""
 
 @implementer(IArchive)
 class ArchiveYear(object):
     """ArchiveYear is the context for this years archives"""
+
+    __parent__ = None
+    entries = None
 
     def __init__(self, year):
         """Initialises the context
@@ -58,9 +65,40 @@ class ArchiveYear(object):
             next_ctx._request = self._request
             return next_ctx
 
+    def finalise(self, last=True):
+        """Attempts to find out if the year is valid
+
+        :last: If this is the last context in the tree.
+        :returns: None
+
+        """
+        if self.__parent__ is not None:
+            # Finalise the parent first
+            self.__parent__.finalise(last=False)
+
+            # Get the entries variable from the parent
+            self.entries = self.__parent__.entries
+            self.entries.filter(Entry.year == self.year)
+        else:
+            # We need a parent ...
+            raise ValueError
+
+        if last:
+            # Attempt to get a single entry, if we get nothing back we return
+            # ValueError
+            first = self.entries.first()
+
+            if first is not None:
+                return None
+            else:
+                return ValueError
+
 @implementer(IArchive)
 class ArchiveYearMonth(object):
     """ArchiveYearMonth is the context for the year/month archives"""
+
+    __parent__ = None
+    entries = None
 
     def __init__(self, month):
         """Initialises the context
@@ -110,9 +148,40 @@ class ArchiveYearMonth(object):
             next_ctx._request = self._request
             return next_ctx
 
+    def finalise(self, last=True):
+        """Attempts to find out if the month is valid
+
+        :last: If this is the last context in the tree.
+        :returns: None
+
+        """
+        if self.__parent__ is not None:
+            # Finalise the parent first
+            self.__parent__.finalise(last=False)
+
+            # Get the entries variable from the parent
+            self.entries = self.__parent__.entries
+            self.entries.filter(Entry.month == self.month)
+        else:
+            # We need a parent ...
+            raise ValueError
+
+        if last:
+            # Attempt to get a single entry, if we get nothing back we return
+            # ValueError
+            first = self.entries.first()
+
+            if first is not None:
+                return None
+            else:
+                return ValueError
+
 @implementer(IArchive)
 class ArchiveYearMonthDay(object):
     """ArchiveYearMonthDay is the context for the year/month/day archives"""
+
+    __parent__ = None
+    entries = None
 
     def __init__(self, day):
         """Initialises the context
@@ -161,3 +230,31 @@ class ArchiveYearMonthDay(object):
             next_ctx.__parent__ = self
             next_ctx._request = self._request
             return next_ctx
+
+    def finalise(self, last=True):
+        """Attempts to find out if the month is valid
+
+        :last: If this is the last context in the tree.
+        :returns: None
+
+        """
+        if self.__parent__ is not None:
+            # Finalise the parent first
+            self.__parent__.finalise(last=False)
+
+            # Get the entries variable from the parent
+            self.entries = self.__parent__.entries
+            self.entries.filter(Entry.day == self.day)
+        else:
+            # We need a parent ...
+            raise ValueError
+
+        if last:
+            # Attempt to get a single entry, if we get nothing back we return
+            # ValueError
+            first = self.entries.first()
+
+            if first is not None:
+                return None
+            else:
+                return ValueError
