@@ -24,6 +24,7 @@ requires = [
     'misaka',
     'psycopg2',
     'pyramid_deform',
+    'pyramid_mako',
 
     'coverage',
     'nose',

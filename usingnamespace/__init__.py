@@ -63,15 +63,18 @@ def main(global_config, **settings):
     config.set_authentication_policy(_authn_policy)
     config.set_authorization_policy(_authz_policy)
 
-    config.include(add_routes)
-    config.include(add_views)
-    config.include(add_events)
+    # We use mako for template rendering
+    config.include('pyramid_mako')
 
     # Set-up deform so that it uses bootstrap
     config.include('deform_bootstrap')
 
     # Add in pyramid_mailer for sending out emails
     config.include('pyramid_mailer')
+
+    config.include(add_routes)
+    config.include(add_views)
+    config.include(add_events)
 
     def cur_domain(request):
         host = request.host if ":" not in request.host else request.host.split(":")[0]
