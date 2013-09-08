@@ -110,6 +110,5 @@ def add_views(config):
     config.scan('.views')
 
 def add_events(config):
-    config.add_subscriber('usingnamespace.events.view_helpers.view_helpers',
-            'pyramid.events.BeforeRender')
+    config.scan('.subscribers')
 
