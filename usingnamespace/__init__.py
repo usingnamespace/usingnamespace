@@ -14,6 +14,9 @@ from sqlalchemy.exc import DBAPIError
 
 from models import DBSession
 
+import predicates.route
+import predicates.subscriber
+
 required_settings = [
         'pyramid.secret.session',
         'pyramid.secret.auth',
