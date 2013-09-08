@@ -86,7 +86,7 @@ class MainRoot(object):
 
         if self.curdomain is not None:
             self.entries = DBSession.query(Entry) \
-                    .filter(Entry.domain_id == self.curdomain.id)
+                    .filter(Entry.site == self.curdomain.site)
             return None
         else:
             raise ValueError
