@@ -81,7 +81,7 @@ def main(global_config, **settings):
 
         return host
 
-    config.set_request_property(cur_domain, 'domain', reify=True)
+    config.add_request_method(callable=cur_domain, name='domain', reify=True)
 
     return config.make_wsgi_app()
 
