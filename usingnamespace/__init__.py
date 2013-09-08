@@ -90,13 +90,6 @@ def main(global_config, **settings):
     config.add_route_predicate('is_management_domain', predicates.route.Management)
     config.add_subscriber_predicate('is_management', predicates.subscriber.IsManagement)
 
-    config.include(add_routes)
-    config.include(add_views)
-    config.include(add_events)
-
-    return config.make_wsgi_app()
-
-def add_routes(config):
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_static_view('deform_static', 'deform:static', cache_max_age=3600)
     config.add_static_view('files', config.registry.settings['usingnamespace.upload_path'], cache_max_age=3600)
@@ -105,10 +98,10 @@ def add_routes(config):
     config.add_route('management', '/*traverse', use_global_views=False, is_management_domain=config.registry.settings['usingnamespace.management.domain'])
     config.add_route('main', '/*traverse', use_global_views=True)
 
-def add_views(config):
     # Scan the views sub-module
     config.scan('.views')
 
-def add_events(config):
+    # Scan the subscribers for events sub-module
     config.scan('.subscribers')
 
+    return config.make_wsgi_app()
