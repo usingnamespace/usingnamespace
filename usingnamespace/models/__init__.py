@@ -17,3 +17,7 @@ from User import User
 from Domain import (
             Domain,
         )
+
+from Site import (
+            Site,
+        )
