@@ -112,16 +112,7 @@ def add_views(config):
     # Scan the views sub-module
     config.scan('.views')
 
-
-
 def add_events(config):
     config.add_subscriber('usingnamespace.events.view_helpers.view_helpers',
             'pyramid.events.BeforeRender')
 
-def route_zero_extend_month_day(request, elements, kw):
-    if 'day' in kw:
-        kw['day'] = "{0:02d}".format(kw['day'])
-    if 'month' in kw:
-        kw['month'] = "{0:02d}".format(kw['month'])
-
-    return elements, kw
