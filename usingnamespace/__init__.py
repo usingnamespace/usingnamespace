@@ -75,10 +75,6 @@ def main(global_config, **settings):
     # Add in pyramid_mailer for sending out emails
     config.include('pyramid_mailer')
 
-    config.include(add_routes)
-    config.include(add_views)
-    config.include(add_events)
-
     def cur_domain(request):
         host = request.host if ":" not in request.host else request.host.split(":")[0]
 
@@ -91,6 +87,9 @@ def main(global_config, **settings):
 
     config.add_request_method(callable=cur_domain, name='domain', reify=True)
     config.add_request_method(callable=is_management, name='is_management', reify=True)
+    config.include(add_routes)
+    config.include(add_views)
+    config.include(add_events)
 
     return config.make_wsgi_app()
 
