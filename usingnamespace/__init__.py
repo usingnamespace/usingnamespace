@@ -81,7 +81,13 @@ def main(global_config, **settings):
 
         return host
 
+    def is_management(request):
+        if request.matched_route.name == 'management':
+            return True
+        return False
+
     config.add_request_method(callable=cur_domain, name='domain', reify=True)
+    config.add_request_method(callable=is_management, name='is_management', reify=True)
 
     return config.make_wsgi_app()
 
