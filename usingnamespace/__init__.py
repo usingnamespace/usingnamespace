@@ -82,7 +82,7 @@ def main(global_config, **settings):
         return host
 
     def is_management(request):
-        if request.matched_route.name == 'management':
+        if request.matched_route is not None and request.matched_route.name == 'management':
             return True
         return False
 
