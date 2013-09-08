@@ -87,6 +87,9 @@ def main(global_config, **settings):
 
     config.add_request_method(callable=cur_domain, name='domain', reify=True)
     config.add_request_method(callable=is_management, name='is_management', reify=True)
+    config.add_route_predicate('is_management_domain', predicates.route.Management)
+    config.add_subscriber_predicate('is_management', predicates.subscriber.IsManagement)
+
     config.include(add_routes)
     config.include(add_views)
     config.include(add_events)
@@ -98,17 +101,9 @@ def add_routes(config):
     config.add_static_view('deform_static', 'deform:static', cache_max_age=3600)
     config.add_static_view('files', config.registry.settings['usingnamespace.upload_path'], cache_max_age=3600)
 
-    def management(info, request):
-        if config.registry.settings['usingnamespace.management.domain'] == request.domain:
-            log.debug("Management is request.host: {}".format(request.domain))
-            return True
-        else:
-            log.debug("This is not a management domain: {}".format(request.domain))
-            return False
-
     # Used so that in the future we can set up a route for the management interface seperately
-    config.add_route('main', '/*traverse', use_global_views=True, custom_predicates=(not_(management),))
-    config.add_route('management', '/*traverse', use_global_views=False, custom_predicates=(management,))
+    config.add_route('management', '/*traverse', use_global_views=False, is_management_domain=config.registry.settings['usingnamespace.management.domain'])
+    config.add_route('main', '/*traverse', use_global_views=True)
 
 def add_views(config):
     # Scan the views sub-module
