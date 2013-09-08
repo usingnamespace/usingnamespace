@@ -34,12 +34,12 @@ defaults = {
                 ],
             'entries': [
                 # Title, entry, slug, user, tags, published
-                (u'one', u'Post number 1', 'one', 1, ["c++", "c"], u'test.alexandra.network.lan', True),
-                (u'two', u'Post number 2', 'two', 1, ["database", "testing"], u'test.alexandra.network.lan', True),
-                (u'three', u'Post number 3', 'three', 1, ["c++", "database"], u'whatever.alexandra.network.lan', True),
-                (u'four', u'Post number 4', 'four', 1, ["testing", "c"], u'whatever.alexandra.network.lan', True),
-                (u'five', u'Post number 5', 'five', 1, ["c++", "c", "database"], u'test.alexandra.network.lan', True),
-                (u'No tags', u'This post has no tags', 'no-tags', 1, [], u'whatever.alexandra.network.lan', True),
+                (u'one', u'Post number 1', 'one', 1, ["c++", "c"], u'test', True),
+                (u'two', u'Post number 2', 'two', 1, ["database", "testing"], u'test', True),
+                (u'three', u'Post number 3', 'three', 1, ["c++", "database"], u'whatever', True),
+                (u'four', u'Post number 4', 'four', 1, ["testing", "c"], u'whatever', True),
+                (u'five', u'Post number 5', 'five', 1, ["c++", "c", "database"], u'test', True),
+                (u'No tags', u'This post has no tags', 'no-tags', 1, [], u'whatever', True),
                 ],
         }
 
@@ -112,7 +112,7 @@ def main(argv=sys.argv):
                 print 'Entry "{}" already exists.'.format(t)
 
 
-def insert_new_rev_entry(title, entry, slug, user, tags, domain, published=False):
+def insert_new_rev_entry(title, entry, slug, user, tags, site, published=False):
     revision = Revision()
     revision.revision = 0
     revision.user_id = user
@@ -125,7 +125,8 @@ def insert_new_rev_entry(title, entry, slug, user, tags, domain, published=False
     DBSession.add(revision)
     DBSession.flush()
 
-    entry = Entry(current_rev = revision.id, slug = slug, domain_id = DBSession.query(Domain).filter(Domain.domain == domain).first().id)
+    entry = Entry(current_rev = revision.id, slug = slug, site =
+            DBSession.query(Site).filter(Site.title == site).first())
     if published:
         entry.pubdate = datetime.datetime.now()
 

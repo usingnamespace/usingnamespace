@@ -143,7 +143,7 @@ class Entry(Base):
             Column('month', Integer(2), server_default=None, index=True, nullable=True),
             Column('day', Integer(2), server_default=None, index=True, nullable=True),
             Column('time', Time, nullable=True),
-            Column('domain_id', Integer, ForeignKey('domains.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
+            Column('site_id', Integer, ForeignKey('sites.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
 
             UniqueConstraint('year', 'month', 'day', 'slug'),
             Index('idx_year_month_day', 'year', 'month', 'day'),
@@ -153,6 +153,7 @@ class Entry(Base):
     current_revision = relationship("Revision", lazy="joined")
     all_revisions = relationship("Revision", secondary="entry_revisions")
     authors = relationship("User", secondary="entry_authors")
+    site = relationship("Site")
 
     _time = __table__.c.time
     _pubdate = composite(PublishedDateTime, 'year', 'month', 'day', '_time', comparator_factory=PublishedDateTimeComparator)
