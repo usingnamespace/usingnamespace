@@ -17,7 +17,7 @@ def deferred_csrf_validator(node, kw):
         request = kw.get('request')
         csrf_token = request.session.get_csrf_token()
         if value != csrf_token:
-            raise colander.Invalid(node, 'CSRF Token has expired.')
+            raise colander.Invalid(node, _('Invalid cross-site scripting token'))
     return validate_csrf
 
 class CSRFSchema(colander.Schema):
