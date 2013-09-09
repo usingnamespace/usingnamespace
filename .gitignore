@@ -1,4 +1,13 @@
 *.db
 *.sqlite
-*.egg-info
 *.ini
+*.egg
+*.egg-info
+*.pyc
+*$py.class
+.coverage
+.tox/
+nosetests.xml
+coverage.xml
+tutorial.db
+dist/
