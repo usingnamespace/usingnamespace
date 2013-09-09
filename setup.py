@@ -8,11 +8,8 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
     'SQLAlchemy',
-    'mako',
     'pyramid',
     'pyramid_debugtoolbar',
-    'pyramid_deform',
-    'pyramid_mailer',
     'pyramid_tm',
     'transaction',
     'waitress',
@@ -24,6 +21,7 @@ requires = [
     'misaka',
     'psycopg2',
     'pyramid_deform',
+    'pyramid_mailer',
     'pyramid_mako',
 
     'coverage',
