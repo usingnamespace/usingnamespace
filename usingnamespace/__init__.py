@@ -95,8 +95,17 @@ def main(global_config, **settings):
     config.add_static_view('files', config.registry.settings['usingnamespace.upload_path'], cache_max_age=3600)
 
     # Used so that in the future we can set up a route for the management interface seperately
-    config.add_route('management', '/*traverse', use_global_views=False, is_management_domain=config.registry.settings['usingnamespace.management.domain'])
-    config.add_route('main', '/*traverse', use_global_views=True)
+    config.add_route('management',
+            '/*traverse',
+            use_global_views=False,
+            factory='.traversal.ManagementRoot',
+            is_management_domain=config.registry.settings['usingnamespace.management.domain']
+            )
+
+    config.add_route('main',
+            '/*traverse',
+            use_global_views=True
+            )
 
     # Scan the views sub-module
     config.scan('.views')
