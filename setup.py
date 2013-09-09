@@ -17,7 +17,6 @@ requires = [
 
     'cryptacular',
     'deform',
-    'deform_bootstrap',
     'misaka',
     'psycopg2',
     'pyramid_deform',

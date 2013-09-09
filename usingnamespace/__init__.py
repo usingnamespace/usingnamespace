@@ -69,8 +69,6 @@ def main(global_config, **settings):
     # We use mako for template rendering
     config.include('pyramid_mako')
 
-    # Set-up deform so that it uses bootstrap
-    config.include('deform_bootstrap')
 
     # Add in pyramid_mailer for sending out emails
     config.include('pyramid_mailer')
