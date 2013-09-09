@@ -107,3 +107,7 @@ class ManagementRoot(object):
 
         """
         self._request = request
+
+    def __getitem__(self, key):
+        """Check to see if we can traverse this ..."""
+        raise KeyError
