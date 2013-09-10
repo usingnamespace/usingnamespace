@@ -16,7 +16,9 @@ def db_failed(context, request):
 
 # Add a slash if the view has not been found.
 @notfound_view_config(renderer='not_found.mako', append_slash=True)
-def not_found(request):
+def not_found(context, request):
+    if request.registry.settings.get('pyramid.debug_notfound', False):
+        log.exception(context)
     request.response.status_int = 404
     return {}
 
