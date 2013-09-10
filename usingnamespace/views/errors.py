@@ -1,3 +1,6 @@
+import logging
+log = logging.getLogger(__name__)
+
 from pyramid.view import (
             view_config,
             notfound_view_config,
@@ -6,7 +9,8 @@ from pyramid.view import (
 from sqlalchemy.exc import DBAPIError
 
 @view_config(context=DBAPIError, renderer='db_failed.mako')
-def db_failed(request):
+def db_failed(context, request):
+    log.exception(context)
     request.response.status_int = 503
     return {}
 
