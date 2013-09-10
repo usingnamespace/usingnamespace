@@ -1,4 +1,13 @@
-from pyramid.view import view_config
+import logging
+log = logging.getLogger(__name__)
+
+from pyramid.view import (
+        view_config,
+        forbidden_view_config,
+        )
+
+from pyramid.security import authenticated_userid
+from pyramid.httpexceptions import HTTPSeeOther
 
 import deform
 from deform import Form
@@ -47,3 +56,18 @@ class Authentication(object):
             )
     def deauth(self):
         return {}
+
+    @forbidden_view_config(
+            containment='..traversal.ManagementRoot',
+            route_name='management',
+            renderer='string',
+            )
+    def forbidden(self):
+        # Check to see if a user is already logged in...
+        if authenticated_userid(self.request):
+            request.response.status_int = 403
+            return {}
+
+        self.request.session['next'] = self.request.path
+        return HTTPSeeOther(location=self.request.route_url(
+            'management', traverse='auth'))
