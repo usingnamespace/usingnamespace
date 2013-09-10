@@ -18,6 +18,7 @@ class Management(object):
             context='..traversal.ManagementRoot',
             route_name='management',
             renderer='management/home.mako',
+            permission='system.Authenticated',
             )
     def home(self):
         return {}
