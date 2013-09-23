@@ -9,8 +9,7 @@ from pyramid.view import (
 from pyramid.security import authenticated_userid
 from pyramid.httpexceptions import HTTPSeeOther
 
-import deform
-from deform import Form
+from deform import ValidationFailure
 
 from ..forms.user import (
         LoginForm,
@@ -35,9 +34,8 @@ class Authentication(object):
             renderer='management/authenticate.mako',
             )
     def authenticate(self):
-        schema = LoginForm().bind(request=self.request)
-        f = Form(schema, action=self.request.current_route_url(),
-                buttons=(deform.form.Button(name='Submit', css_class='btn btn-primary'),), css_class='testing')
+        (schema, f) = LoginForm.create_form(request=self.request,
+                action=self.request.current_route_url())
         return {
                 'form': f.render(),
                 }
