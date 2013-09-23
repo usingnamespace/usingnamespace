@@ -8,13 +8,21 @@ import deform
 @colander.deferred
 def deferred_csrf_default(node, kw):
     request = kw.get('request')
+
+    if request is None:
+        raise KeyError('Require bind: request')
+
     csrf_token = request.session.get_csrf_token()
     return csrf_token
 
 @colander.deferred
 def deferred_csrf_validator(node, kw):
+    request = kw.get('request')
+
+    if request is None:
+        raise KeyError('Require bind: request')
+
     def validate_csrf(node, value):
-        request = kw.get('request')
         csrf_token = request.session.get_csrf_token()
         if value != csrf_token:
             raise colander.Invalid(node, _('Invalid cross-site scripting token'))
