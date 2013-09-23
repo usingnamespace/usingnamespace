@@ -15,7 +15,7 @@ from ..models import *
 
 defaults = {
             'users': [
-                (u'xistence', 'Bert JW Regeer', 'test')
+                (u'xistence@0x58.com', u'Bert JW Regeer', 'test')
                 ],
             'tags': [
                 (u'c++', "The C++ programming language"),
@@ -63,7 +63,7 @@ def main(argv=sys.argv):
         for (u, r, c) in defaults['users']:
             sp = transaction.savepoint()
             try:
-                user = User(username=u, realname=r, credentials=c)
+                user = User(email=u, name=r, credentials=c)
                 DBSession.add(user)
                 DBSession.flush()
             except IntegrityError:
