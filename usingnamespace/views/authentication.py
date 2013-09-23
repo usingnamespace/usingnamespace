@@ -15,6 +15,11 @@ from ..forms.user import (
         LoginForm,
         )
 
+from ..auth import (
+        remember,
+        forget,
+        )
+
 class Authentication(object):
     """Authentication provides views for things related to authentication"""
 
@@ -43,10 +48,29 @@ class Authentication(object):
     @view_config(context='..traversal.ManagementRoot',
             name='auth',
             route_name='management',
-            request_method='POST'
+            renderer='management/authenticate.mako',
+            request_method='POST',
             )
     def authenticate_submit(self):
-        return {}
+
+        controls = self.request.POST.items()
+        (schema, f) = LoginForm.create_form(request=self.request,
+                action=self.request.current_route_url())
+        try:
+            appstruct = f.validate(controls)
+            remember(self.request, appstruct['email'])
+
+            log.debug("Sending user to: {}".format(self.request.session.get('next', None)))
+            return HTTPSeeOther(location=self.request.route_url(
+                'management', traverse=self.request.session.get('next', '')))
+        except ValidationFailure as e:
+            if e.field['csrf_token'].error is not None:
+                e.field.error = e.field['csrf_token'].error
+                e.field['csrf_token'].cstruct = self.request.session.get_csrf_token()
+
+            return {
+                    'form': e.render(),
+                    }
 
     @view_config(context='..traversal.ManagementRoot',
             name='deauth',
