@@ -52,3 +52,16 @@ class User(Base):
         """Backwards compat..."""
         return self.email
 
+    def check_password(self, password):
+        manager = BCRYPTPasswordManager()
+        return manager.check(self.credentials, password)
+
+    @classmethod
+    def validate_user_password(cls, email, password):
+        user = DBSession.query(cls).filter(cls.email == email.lower()).first()
+
+        if user is not None:
+            if user.check_password(password):
+                return user
+        return None
+
