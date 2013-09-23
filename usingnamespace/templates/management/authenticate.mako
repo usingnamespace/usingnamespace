@@ -75,6 +75,22 @@
         padding-top: 5px;
     }
 
+    .error .form-control,
+    .error .desc {
+        color: #b94a48;
+    }
+
+    .error .form-control {
+        border-color: #b94a48;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    }
+
+    .error .form-control:focus {
+        border-color: #953b39;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+    }
 
 </style>
 </%block>
