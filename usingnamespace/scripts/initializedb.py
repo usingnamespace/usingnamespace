@@ -25,8 +25,8 @@ defaults = {
                 (u'not used', "Don't look at me that way"),
                 ],
             'sites': [
-                (u'whatever', u'Everything and anything', "xistence"),
-                (u'test', u'A simple test', "xistence"),
+                (u'whatever', u'Everything and anything', "xistence@0x58.com"),
+                (u'test', u'A simple test', "xistence@0x58.com"),
                 ],
             'domains': [
                 (u'test.alexandra.network.lan', "whatever"),
@@ -84,7 +84,7 @@ def main(argv=sys.argv):
             sp = transaction.savepoint()
             try:
                 site = Site(title = t, tagline = tag, owner =
-                        DBSession.query(User).filter(User.username ==
+                        DBSession.query(User).filter(User.email ==
                             o).first())
                 DBSession.add(site)
                 DBSession.flush()
