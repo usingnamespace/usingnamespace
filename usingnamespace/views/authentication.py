@@ -91,6 +91,7 @@ class Authentication(object):
             request.response.status_int = 403
             return {}
 
-        self.request.session['next'] = self.request.path
+        if self.request.path != '/':
+            self.request.session['next'] = self.request.path
         return HTTPSeeOther(location=self.request.route_url(
             'management', traverse='auth'))
