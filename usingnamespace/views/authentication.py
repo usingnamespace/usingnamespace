@@ -57,11 +57,12 @@ class Authentication(object):
                 action=self.request.current_route_url())
         try:
             appstruct = f.validate(controls)
-            remember(self.request, appstruct['email'])
+            headers = remember(self.request, appstruct['email'])
 
             log.debug("Sending user to: {}".format(self.request.session.get('next', None)))
             return HTTPSeeOther(location=self.request.route_url(
-                'management', traverse=self.request.session.get('next', '')))
+                'management', traverse=self.request.session.get('next', '')),
+                headers = headers)
         except ValidationFailure as e:
             if e.field['csrf_token'].error is not None:
                 e.field.error = e.field['csrf_token'].error
