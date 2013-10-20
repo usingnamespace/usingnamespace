@@ -3,6 +3,7 @@ log = logging.getLogger(__name__)
 
 from pyramid.view import (
         view_config,
+        view_defaults,
         forbidden_view_config,
         )
 
@@ -20,6 +21,7 @@ from ..auth import (
         forget,
         )
 
+@view_defaults(context='..traversal.ManagementRoot', route_name='management')
 class Authentication(object):
     """Authentication provides views for things related to authentication"""
 
@@ -33,9 +35,8 @@ class Authentication(object):
         self.context = context
         self.request = request
 
-    @view_config(context='..traversal.ManagementRoot',
+    @view_config(
             name='auth',
-            route_name='management',
             renderer='management/authenticate.mako',
             )
     def authenticate(self):
@@ -45,14 +46,12 @@ class Authentication(object):
                 'form': f.render(),
                 }
 
-    @view_config(context='..traversal.ManagementRoot',
+    @view_config(
             name='auth',
-            route_name='management',
             renderer='management/authenticate.mako',
             request_method='POST',
             )
     def authenticate_submit(self):
-
         controls = self.request.POST.items()
         (schema, f) = LoginForm.create_form(request=self.request,
                 action=self.request.current_route_url())
@@ -72,16 +71,14 @@ class Authentication(object):
                     'form': e.render(),
                     }
 
-    @view_config(context='..traversal.ManagementRoot',
+    @view_config(
             name='deauth',
-            route_name='management',
             )
     def deauth(self):
         return {}
 
     @forbidden_view_config(
             containment='..traversal.ManagementRoot',
-            route_name='management',
             renderer='string',
             )
     def forbidden(self):
