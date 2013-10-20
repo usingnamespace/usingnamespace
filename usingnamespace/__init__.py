@@ -56,7 +56,7 @@ def main(global_config, **settings):
             http_only=True,
             debug=True,
             hashalg='sha512',
-            callback=lambda x, y: 0,
+            callback=lambda x, y: [],
             )
 
     # The stock standard authorization policy will suffice for our needs
