@@ -76,7 +76,10 @@ class Authentication(object):
             name='deauth',
             )
     def deauth(self):
-        return {}
+        headers = forget(self.request)
+
+        return HTTPSeeOther(location=self.request.route_url('management',
+            traverse=''), headers = headers)
 
     @forbidden_view_config(
             containment='..traversal.ManagementRoot',
