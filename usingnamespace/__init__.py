@@ -22,6 +22,7 @@ required_settings = [
         'pyramid.secret.auth',
         'usingnamespace.upload_path',
         'usingnamespace.management.domain',
+        'usingnamespace.name',
         ]
 
 def main(global_config, **settings):
