@@ -2,7 +2,7 @@
 
 from meta import DBSession, Base
 
-from Entry import (
+from entry import (
             Entry,
             Revision,
             EntryAuthors,
@@ -12,12 +12,12 @@ from Entry import (
             RevisionRendered,
         )
 
-from User import User
+from user import User
 
-from Domain import (
+from domain import (
             Domain,
         )
 
-from Site import (
+from site import (
             Site,
         )

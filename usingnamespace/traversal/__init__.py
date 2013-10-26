@@ -3,13 +3,13 @@
 import logging
 log = logging.getLogger(__name__)
 
-from Archive import (
+from archive import (
             ArchiveYear,
             ArchiveYearMonth,
             ArchiveYearMonthDay,
         )
 
-from Entry import (
+from entry import (
         SingleEntry,
         )
 

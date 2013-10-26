@@ -4,7 +4,7 @@ log = logging.getLogger(__name__)
 from zope.interface import Interface
 from zope.interface import implementer
 
-from .Entry import SingleEntry as Entry_ctx
+from .entry import SingleEntry as Entry_ctx
 
 from ..models import (
             Entry,

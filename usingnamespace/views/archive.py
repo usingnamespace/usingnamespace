@@ -9,7 +9,7 @@ from ..models import (
     Entry,
     )
 
-from FinaliseContext import FinaliseContext
+from finalisecontext import FinaliseContext
 
 class Archive(FinaliseContext):
 
