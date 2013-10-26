@@ -24,7 +24,7 @@
         <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#">Project name</a>
+                    <a class="navbar-brand" href="#">${request.registry.settings['usingnamespace.name']}</a>
                 </div>
                 <nav class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
