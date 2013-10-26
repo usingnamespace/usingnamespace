@@ -19,7 +19,7 @@ import os
 ROOT_PATH = os.path.dirname(__file__)
 CONFIG_PATH = os.path.join(ROOT_PATH, '..', '..', 'config', 'test.ini')
 setup_logging(CONFIG_PATH)
-from meta import settings
+from dbbase import settings
 
 def setup():
     engine = engine_from_config(settings, prefix='sqlalchemy.')
