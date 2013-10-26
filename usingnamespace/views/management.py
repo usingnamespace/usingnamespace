@@ -1,8 +1,14 @@
-from pyramid.view import view_config
+from pyramid.view import (
+        view_config,
+        view_defaults,
+        )
 
-
+@view_defaults(
+        context='..traversal.ManagementRoot',
+        route_name='management'
+        )
 class Management(object):
-    """Authentication provides views for things related to authentication"""
+    """Provide all of the views for the main page of management"""
 
     def __init__(self, context, request):
         """Initialises the view class
@@ -13,12 +19,10 @@ class Management(object):
         """
         self.context = context
         self.request = request
-    
+
     @view_config(
-            context='..traversal.ManagementRoot',
-            route_name='management',
             renderer='management/home.mako',
-            permission='system.Authenticated',
+            effective_principals='system.Authenticated',
             )
     def home(self):
         return {}
