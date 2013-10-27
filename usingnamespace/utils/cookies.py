@@ -143,6 +143,10 @@ class CookieHelper(object):
         :value: The value to store in the cookie
         """
 
+        # If the user doesn't provide max_age, grab it from self
+        if max_age is None:
+            max_age = self.max_age
+
         # Length selected based upon http://browsercookielimits.x64.me
         if len(value) > 4093:
             raise ValueError(
@@ -151,8 +155,10 @@ class CookieHelper(object):
                 )
 
         if max_age is None:
+            # Cookie has the lifetime of a browser session
             max_age = ''
         elif max_age <= 0:
+            # Expire ze cookie =)
             max_age = "; Max-Age=0; Expires=Wed, 31-Dec-97 23:59:59 GMT"
             value = ''
         else:
