@@ -68,4 +68,5 @@ def includeme(config):
     config.set_authentication_policy(_authn_policy)
     config.set_authorization_policy(_authz_policy)
 
+    config.add_request_method('..utils.RequestStorage', name='state', property=True, reify=True)
     config.add_request_method(user, name='user', property=True, reify=True)

@@ -51,8 +51,7 @@ def main(global_config, **settings):
 
     config.set_session_factory(_session_factory)
 
-    config.add_request_method('.utils.RequestStorage', name='state', property=True, reify=True)
-
+    # Include our security stuff
     config.include('.security')
 
     # We use mako for template rendering
