@@ -173,3 +173,10 @@ class CookiesTest(unittest.TestCase):
 
         longstring = 'a' * 4096
         self.assertRaises(ValueError, cookie.raw_headers, request, longstring)
+
+    def test_very_long_key(self):
+        longstring = 'a' * 1024
+        cookie = self.makeOne(secret=longstring)
+        request = self.makeOneRequest()
+
+        ret = cookie.raw_headers(request, "test")

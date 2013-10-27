@@ -56,7 +56,7 @@ class CookieHelper(object):
         self.domain = domain
         self.hashalg = hashalg
 
-        self.digestmod = lambda: hashlib.new(self.hashalg)
+        self.digestmod = lambda string=b'': hashlib.new(self.hashalg, string)
         self.digest_size = self.digestmod().digest_size
 
         self.salted_secret = bytes_(salt or '') + bytes_(secret)
