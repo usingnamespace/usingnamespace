@@ -116,7 +116,7 @@ class CookieHelper(object):
 
         cookies = self.raw_headers(request, value, max_age=max_age)
 
-        response.headerlist.append(cookies)
+        response.headerlist.extend(cookies)
 
         return response
 
