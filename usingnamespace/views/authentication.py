@@ -39,6 +39,10 @@ class Authentication(object):
             renderer='management/authenticate.mako',
             )
     def authenticate(self):
+        if authenticated_userid(self.request) is not None:
+            return HTTPSeeOther(location=self.request.route_url('management',
+                traverse=self.request.session.get('next', '')))
+
         (schema, f) = LoginForm.create_form(request=self.request,
                 action=self.request.current_route_url())
         return {
