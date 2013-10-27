@@ -67,6 +67,7 @@ def main(global_config, **settings):
     config.set_authentication_policy(_authn_policy)
     config.set_authorization_policy(_authz_policy)
 
+    config.add_request_method('.utils.RequestStorage', name='state', property=True, reify=True)
     # We use mako for template rendering
     config.include('pyramid_mako')
 
