@@ -129,7 +129,7 @@ class CookieHelper(object):
         """
         cookie = request.cookies.get(self.cookie_name)
 
-        if cookie is None:
+        if not cookie:
             return None
 
         return self.signed_deserialize(cookie)
