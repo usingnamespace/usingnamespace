@@ -18,13 +18,21 @@ from pyramid.security import (
 
 from ..utils.cookies import CookieHelper
 
-from ..security import _clean_principal
-
 from ..models import (
         DBSession,
         User,
         UserTickets,
         )
+
+def _clean_principal(princid):
+    """ Utility function that cleans up the passed in principal
+
+    This can easily also be extended for example to make sure that certain
+    usernames are automatically off-limits.
+    """
+    if princid in (Authenticated, Everyone):
+        princid = None
+    return princid
 
 @implementer(IAuthenticationPolicy)
 class AuthPolicy(object):

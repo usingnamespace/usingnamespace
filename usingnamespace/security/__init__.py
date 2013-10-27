@@ -19,15 +19,9 @@ from pyramid.interfaces import (
     IAuthenticationPolicy,
     )
 
-def _clean_principal(princid):
-    """ Utility function that cleans up the passed in principal
+from pyramid.authorization import ACLAuthorizationPolicy
 
-    This can easily also be extended for example to make sure that certain
-    usernames are automatically off-limits.
-    """
-    if princid in (Authenticated, Everyone):
-        princid = None
-    return princid
+from authentication import AuthPolicy
 
 def user(request):
     userid = unauthenticated_userid(request)
@@ -59,3 +53,19 @@ def user(request):
 
     return userinfo
 
+def includeme(config):
+    _authn_policy = AuthPolicy(
+            config.registry.settings['pyramid.secret.auth'],
+            max_age=864000,
+            http_only=True,
+            debug=True,
+            hashalg='sha512',
+            )
+
+    # The stock standard authorization policy will suffice for our needs
+    _authz_policy = ACLAuthorizationPolicy()
+
+    config.set_authentication_policy(_authn_policy)
+    config.set_authorization_policy(_authz_policy)
+
+    config.add_request_method(user, name='user', property=True, reify=True)

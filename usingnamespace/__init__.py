@@ -6,7 +6,6 @@ from pyramid.config import (
         not_,
         )
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
-from pyramid.authorization import ACLAuthorizationPolicy
 
 from sqlalchemy import engine_from_config
 from sqlalchemy.exc import DBAPIError
@@ -50,23 +49,11 @@ def main(global_config, **settings):
             cookie_max_age=864000
             )
 
-    _authn_policy = AuthPolicy(
-            settings['pyramid.secret.auth'],
-            max_age=864000,
-            http_only=True,
-            debug=True,
-            hashalg='sha512',
-            )
-
-    # The stock standard authorization policy will suffice for our needs
-    _authz_policy = ACLAuthorizationPolicy()
-
     config.set_session_factory(_session_factory)
-    config.set_authentication_policy(_authn_policy)
-    config.set_authorization_policy(_authz_policy)
 
     config.add_request_method('.utils.RequestStorage', name='state', property=True, reify=True)
-    config.add_request_method('.security.user', name='user', property=True, reify=True)
+
+    config.include('.security')
 
     # We use mako for template rendering
     config.include('pyramid_mako')
