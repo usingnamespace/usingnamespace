@@ -12,7 +12,10 @@ from entry import (
             RevisionRendered,
         )
 
-from user import User
+from user import (
+        User,
+        UserTickets,
+        )
 
 from domain import (
             Domain,

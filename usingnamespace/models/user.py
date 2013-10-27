@@ -2,17 +2,30 @@
 # Author: Bert JW Regeer <bertjw@regeer.org>
 # Created: 2012-09-25
 
+import datetime
+
 from meta import (
         Base,
         DBSession,
         )
 
 from sqlalchemy import (
-        Table,
         Column,
+        DateTime,
+        ForeignKey,
+        Index,
         Integer,
-        Unicode,
+        PrimaryKeyConstraint,
         String,
+        Table,
+        Unicode,
+        and_,
+        )
+
+from sqlalchemy.orm import (
+        contains_eager,
+        noload,
+        relationship,
         )
 
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -64,4 +77,21 @@ class User(Base):
             if user.check_password(password):
                 return user
         return None
+
+class UserTickets(Base):
+    __table__ = Table('user_tickets', Base.metadata,
+            Column('ticket', String(128)),
+            Column('user_id', Integer, ForeignKey('users.id', onupdate="CASCADE", ondelete="CASCADE")),
+            Column('remote_addr', String(45)),
+            Column('created', DateTime, default=datetime.datetime.utcnow, nullable=False),
+
+            PrimaryKeyConstraint('ticket', 'user_id'),
+            Index('ix_ticket_userid', 'ticket', 'user_id'),
+            )
+
+    user = relationship("User", lazy="joined", backref='tickets')
+
+    @classmethod
+    def find_ticket_userid(cls, ticket, userid):
+        return DBSession.query(cls).join(User, and_(User.email == userid.lower(), User.id == cls.user_id)).filter(cls.ticket == ticket).options(contains_eager('user')).first()
 
