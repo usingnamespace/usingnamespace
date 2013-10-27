@@ -7,18 +7,17 @@ from pyramid.view import (
         forbidden_view_config,
         )
 
-from pyramid.security import authenticated_userid
+from pyramid.security import (
+        remember,
+        forget,
+        authenticated_userid
+        )
 from pyramid.httpexceptions import HTTPSeeOther
 
 from deform import ValidationFailure
 
 from ..forms.user import (
         LoginForm,
-        )
-
-from ..auth import (
-        remember,
-        forget,
         )
 
 @view_defaults(context='..traversal.ManagementRoot', route_name='management')
