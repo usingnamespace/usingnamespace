@@ -1,7 +1,3 @@
-# File: User.py
-# Author: Bert JW Regeer <bertjw@regeer.org>
-# Created: 2012-09-25
-
 import datetime
 
 from meta import (
