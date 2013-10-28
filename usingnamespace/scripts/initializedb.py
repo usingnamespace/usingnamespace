@@ -25,12 +25,15 @@ defaults = {
                 (u'not used', "Don't look at me that way"),
                 ],
             'sites': [
-                (u'whatever', u'Everything and anything', "xistence@0x58.com"),
-                (u'test', u'A simple test', "xistence@0x58.com"),
+                (u'whatever', u'whatever', u'Everything and anything', "xistence@0x58.com"),
+                (u'test', u'test', u'A simple test', "xistence@0x58.com"),
+                (u'howdy', u'howdy', u'Another very simple test', "xistence@0x58.com"),
+                (u'Ni Hao', u'\u4f60\u597d', u'A blog detailing my ventures in China', "xistence@0x58.com"),
                 ],
             'domains': [
-                (u'test.alexandra.network.lan', "whatever"),
-                (u'whatever.alexandra.network.lan', "test"),
+                (u'test.alexandra.network.lan', u'whatever'),
+                (u'whatever.alexandra.network.lan', u'test'),
+                (u'\u4f60\u597d.alexandra.network.lan', u'Ni Hao'),
                 ],
             'entries': [
                 # Title, entry, slug, user, tags, published
@@ -68,7 +71,7 @@ def main(argv=sys.argv):
                 DBSession.flush()
             except IntegrityError:
                 sp.rollback()
-                print 'Username "{}" already exists.'.format(u)
+                print u'Username "{}" already exists.'.format(u)
 
         for (t, d) in defaults['tags']:
             sp = transaction.savepoint()
@@ -78,19 +81,19 @@ def main(argv=sys.argv):
                 DBSession.flush()
             except IntegrityError:
                 sp.rollback()
-                print 'Tag "{}" already exists.'.format(t)
+                print u'Tag "{}" already exists.'.format(t)
 
-        for (t, tag, o) in defaults['sites']:
+        for (t, i, tag, o) in defaults['sites']:
             sp = transaction.savepoint()
             try:
-                site = Site(title = t, tagline = tag, owner =
+                site = Site(title = t, idna = i, tagline = tag, owner =
                         DBSession.query(User).filter(User.email ==
                             o).first())
                 DBSession.add(site)
                 DBSession.flush()
             except IntegrityError:
                 sp.rollback()
-                print 'Site "{}" already exists.'.format(t)
+                print u'Site "{}" already exists.'.format(t)
 
         for (d, s) in defaults['domains']:
             sp = transaction.savepoint()
@@ -101,7 +104,7 @@ def main(argv=sys.argv):
                 DBSession.flush()
             except IntegrityError:
                 sp.rollback()
-                print 'Domain "{}" already exists.'.format(d)
+                print u'Domain "{}" already exists.'.format(d)
 
         for (t, e, s, u, ta, d, p) in defaults['entries']:
             sp = transaction.savepoint()
@@ -109,7 +112,7 @@ def main(argv=sys.argv):
                 insert_new_rev_entry(t, e, s, u, ta, d, published=p)
             except IntegrityError:
                 sp.rollback()
-                print 'Entry "{}" already exists.'.format(t)
+                print u'Entry "{}" already exists.'.format(t)
 
 
 def insert_new_rev_entry(title, entry, slug, user, tags, site, published=False):
