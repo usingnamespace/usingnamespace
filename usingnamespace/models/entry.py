@@ -180,11 +180,7 @@ class Entry(Base):
 
     @hybrid_property
     def pubdate(self):
-        # Depending on the time, we may be some internal SQLAlchemy instance,
-        # or we may be our good ol' self PublishedDateTime. If we are the
-        # latter, we return a datetime object which is what most people are
-        # expecting anyway.
-        if isinstance(self._pubdate, PublishedDateTime):
+        if isinstance(self, Entry):
             return self._pubdate.getdatetime()
         return self._pubdate
 
