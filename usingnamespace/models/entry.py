@@ -33,6 +33,7 @@ from sqlalchemy.orm import (
         composite,
         deferred,
         relationship,
+        backref,
         )
 
 from sqlalchemy.ext.hybrid import (
@@ -153,7 +154,7 @@ class Entry(Base):
     current_revision = relationship("Revision", lazy="joined")
     all_revisions = relationship("Revision", secondary="entry_revisions")
     authors = relationship("User", secondary="entry_authors")
-    site = relationship("Site")
+    site = relationship("Site", backref=backref("entries", lazy="dynamic"))
 
     _time = __table__.c.time
     _pubdate = composite(PublishedDateTime, 'year', 'month', 'day', '_time', comparator_factory=PublishedDateTimeComparator)
