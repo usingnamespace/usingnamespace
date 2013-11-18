@@ -22,7 +22,7 @@ class URLHelper(object):
         else:
             kw['year'] = args[0]
 
-        return route_url('uns.year', self.request, **kw)
+        return ""
 
     def ym_archive(self, *args, **kw):
         if len(args) == 0:
@@ -38,7 +38,7 @@ class URLHelper(object):
             kw['year'] = args[0]
             kw['month'] = args[1]
 
-        return route_url('uns.year.month', self.request, **kw)
+        return ""
 
     def ymd_archive(self, *args, **kw):
         if len(args) == 0:
@@ -56,7 +56,7 @@ class URLHelper(object):
             kw['month'] = args[1]
             kw['day'] = args[2]
 
-        return route_url('uns.year.month.day', self.request, **kw)
+        return ""
 
     def entry(self, *args, **kw):
         if len(args) == 0:
@@ -76,5 +76,5 @@ class URLHelper(object):
             kw['day'] = args[2]
             kw['title'] = args[3]
 
-        return route_url('uns.year.month.day.title', self.request, **kw)
+        return ""
 
