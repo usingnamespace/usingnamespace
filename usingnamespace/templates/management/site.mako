@@ -7,35 +7,27 @@
         <title><%block name="title">Using Namespace Management</%block></title>
         <link rel="shortcut icon" href="${request.static_url('usingnamespace:static/favicon.ico')}">
         <%block name="stylesheets">
-        <link rel="stylesheet" href="${request.static_url('usingnamespace:static/bootstrap/css/bootstrap.min.css')}" type="text/css">
-        ## <link rel="stylesheet" href="${request.static_url('usingnamespace:static/management/usingnamespace.css')}" type="text/css" />
+        <link rel="stylesheet" href="${request.static_url('usingnamespace:static/management.css')}" type="text/css" />
         </%block>
         <%block name="javascript_head"></%block>
-        <style type="text/css">
-            body {
-                padding-top: 50px;
-            }
-        </style>
         </%block>
     </head>
 
     <body>
         <%block name="body_content">
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#">${request.registry.settings['usingnamespace.name']}</a>
-                </div>
-                <nav class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
+        <header>
+            <h1>
+                <a href="${request.route_url('management', traverse='')}">${request.registry.settings['usingnamespace.name']}</a>
+            </h1>
+            <nav>
+                <ul>
                     <%block name="nav">
-                    <li class="active"><a href="${request.route_url('management', traverse='')}">Home</a></li>
+                    <li><a href="${request.route_url('management', traverse='')}">Home</a></li>
                     <li><a href="${request.route_url('management', traverse='deauth')}">Deauth</a></li>
                     </%block>
                 </ul>
-                </nav>
-            </div>
-        </div>
+            </nav>
+        </header>
 
         <%block name="main_content">
         <div class="container">
@@ -47,12 +39,11 @@
         </%block>
         </%block>
         <footer>
-        <%block name="footer">
-        </%block>
+            <%block name="footer">
+            </%block>
         </footer>
         <%block name="javascript_end">
         <script type="text/javascript" src="${request.static_url('usingnamespace:static/jquery-2.0.3.min.js')}"></script>
-        <script type="text/javascript" src="${request.static_url('usingnamespace:static/bootstrap/js/bootstrap.min.js')}"></script>
         </%block>
     </body>
 </html>
