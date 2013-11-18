@@ -9,7 +9,6 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 requires = [
     'SQLAlchemy',
     'pyramid',
-    'pyramid_debugtoolbar',
     'pyramid_tm',
     'transaction',
     'waitress',
@@ -22,9 +21,17 @@ requires = [
     'pyramid_deform',
     'pyramid_mailer',
     'pyramid_mako',
+    ]
 
-    'coverage',
+tests_require = []
+
+testing_requires =  tests_require + [
     'nose',
+    'coverage',
+    ]
+
+develop_requires = [
+    'pyramid_debugtoolbar',
     ]
 
 setup(name='usingnamespace',
@@ -44,8 +51,13 @@ setup(name='usingnamespace',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
-      test_suite='usingnamespace',
+      test_suite='usingnamespace.tests',
       install_requires=requires,
+      tests_require=tests_require,
+      extras_require = {
+          'develop': develop_requires,
+          'testing': testing_requires,
+          },
       entry_points="""\
       [paste.app_factory]
       main = usingnamespace:main
