@@ -25,11 +25,7 @@
         margin: 0 auto 20px;
         background-color: #fff;
         border: 1px solid #e5e5e5;
-        -webkit-border-radius: 5px;
-        -moz-border-radius: 5px;
         border-radius: 5px;
-        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-        -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
         box-shadow: 0 1px 2px rgba(0,0,0,.05);
     }
 
@@ -82,13 +78,11 @@
 
     .error .form-control {
         border-color: #b94a48;
-        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
         box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     }
 
     .error .form-control:focus {
         border-color: #953b39;
-        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
         box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
     }
 
