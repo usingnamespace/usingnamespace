@@ -29,9 +29,8 @@
                 <nav class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <%block name="nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li class="active"><a href="${request.route_url('management', traverse='')}">Home</a></li>
+                    <li><a href="${request.route_url('management', traverse='deauth')}">Deauth</a></li>
                     </%block>
                 </ul>
                 </nav>
