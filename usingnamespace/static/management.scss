@@ -1,0 +1,68 @@
+@import "normalize.css";
+
+@import 'bourbon/bourbon';
+@import "bitters/grid-settings";
+@import 'neat/neat';
+@import 'bitters/bitters';
+
+@import 'variables';
+
+body {
+    margin: auto;
+}
+
+header {
+    $max-width: 100%;
+    @include outer-container();
+    background-color: #f8f8f8;
+    border-color: #e7e7e7;
+
+    nav {
+        @include span-columns(10);
+
+        ul {
+            list-style: none;
+            margin: 0;
+            float: left;
+            height: auto;
+
+            li {
+                position: relative;
+                display: block;
+                float: left;
+
+                a {
+                    background: #f00;
+                    line-height: 20px;
+
+                    color: #555;
+                    background-color: #e7e7e7;
+
+                    padding: 15px;
+                    display: block;
+                    position: relative;
+                }
+            }
+        }
+    }
+
+    h1 {
+        padding: 15px 15px;
+        font-size: $base-font-size + 0.5;
+        line-height: 20px;
+        @include span-columns(2);
+
+        a {
+            color: #777;
+            text-decoration: none;
+        }
+    }
+}
+
+ul {
+    @extend %default-ul;
+}
+
+ol {
+    @extend %default-ol;
+}
