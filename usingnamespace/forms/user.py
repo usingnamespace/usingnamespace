@@ -31,17 +31,16 @@ def login_username_password(node, kw):
 class LoginForm(CSRFSchema, SchemaFormMixin):
     """The user login form."""
 
-    __buttons__ = (deform.form.Button(name=_("Submit"), css_class='btn btn-primary'),)
+    __buttons__ = (deform.form.Button(name=_("Submit"),),)
     __validator__ = login_username_password
 
     email = colander.SchemaNode(colander.String(),
             title=_("Email Address"),
-            widget=deform.widget.TextInputWidget(css_class='form-control'),
+            widget=deform.widget.TextInputWidget(),
             )
     password = colander.SchemaNode(colander.String(),
             title=_("Password"),
             validator=colander.Length(min=4),
-            widget=deform.widget.PasswordWidget(size=20,
-                css_class='form-control'),
+            widget=deform.widget.PasswordWidget(size=20),
             )
 
