@@ -69,5 +69,5 @@ class Domain(Base):
     def domain(cls):
         return IdnaComparator(cls._domain)
 
-    site = relationship("Site", backref="domains")
+    site = relationship("Site", backref="domains", lazy="joined")
 
