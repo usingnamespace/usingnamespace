@@ -1,12 +1,10 @@
 <%inherit file="site.mako" />
 
 <%block name="body_content">
-<div class="container">
     <div class="form-signin">
         <h1>Authenticate</h1>
         ${form|n}
     </div>
-</div>
 </%block>
 
 <%block name="title">Authenticate - ${parent.title()}</%block>
