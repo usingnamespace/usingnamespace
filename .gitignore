@@ -11,3 +11,4 @@ nosetests.xml
 coverage.xml
 tutorial.db
 dist/
+.sass-cache
