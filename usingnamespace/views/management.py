@@ -28,7 +28,12 @@ class Management(object):
             effective_principals='system.Authenticated',
             )
     def home(self):
-        return {}
+
+        userinfo = self.request.user
+
+        return {
+                'sites': userinfo.user.sites,
+                }
 
 @view_defaults(
         containment='..traversal.ManagementRoot',
