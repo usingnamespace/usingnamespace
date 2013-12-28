@@ -16,7 +16,7 @@ from pyramid.security import (
     Everyone,
     )
 
-from ..utils.cookies import CookieHelper
+from webob.cookies import SignedCookieProfile as CookieHelper
 
 from ..models import (
         DBSession,
@@ -48,35 +48,39 @@ class AuthPolicy(object):
                  secret,
                  cookie_name='auth',
                  secure=False,
+                 max_age=None,
+                 httponly=False,
+                 path="/",
+                 domains=None,
                  timeout=None,
                  reissue_time=None,
-                 max_age=None,
-                 path="/",
-                 http_only=False,
-                 wild_domain=False,
                  debug=False,
-                 hashalg="sha512",
-                 parent_domain=False,
-                 domain=None,
+                 hashalg='sha512',
                  ):
+
+        self.domains = domains
+
         self.cookie = CookieHelper(
             secret,
             'usingnamespace-auth',
             cookie_name,
             secure=secure,
             max_age=max_age,
-            http_only=http_only,
+            httponly=httponly,
             path=path,
-            wild_domain=wild_domain,
-            parent_domain=parent_domain,
-            domain=domain,
+            domains=domains,
             hashalg=hashalg,
             )
         self.debug = debug
 
     def unauthenticated_userid(self, request):
         """ The userid key within the auth_tkt cookie."""
-        result = self.cookie.get_cookie(request)
+
+        debug = self.debug
+
+        result = self.cookie.bind(request).get_value()
+
+        debug and self._log('Got result from cookie: %s' % (result,), 'unauthenticated_userid', request)
 
         if result:
             principal = result['principal']
@@ -174,6 +178,8 @@ class AuthPolicy(object):
 
         """
 
+        debug = self.debug
+
         value = {}
         value['principal'] = principal
         value['auth_ticket'] = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for x in range(128))
@@ -184,11 +190,17 @@ class AuthPolicy(object):
         if user is None:
             raise ValueError('Invalid principal provided')
 
+        debug and self._log('Remember user: %s, ticket: %s' % (user.email, value['auth_ticket']), 'remember', request)
+
         ticket = value['auth_ticket']
         remote_addr = request.environ['REMOTE_ADDR'] if 'REMOTE_ADDR' in request.environ else None
         user.tickets.append(UserTickets(ticket=ticket, remote_addr=remote_addr))
 
-        return self.cookie.raw_headers(request, value)
+        if self.domains is None:
+            self.domains = []
+            self.domains.append(request.domain)
+
+        return self.cookie.get_headers(value, domains=self.domains)
 
     def forget(self, request):
         """ A list of headers which will delete appropriate cookies."""
@@ -197,10 +209,8 @@ class AuthPolicy(object):
         user = request.user
 
         if user.ticket:
-            debug and self._log(
-                    'forgetting user: %s, removing ticket: %s' % (user.id,
-                        user.ticket.ticket), 'forget', request)
+            debug and self._log('forgetting user: %s, removing ticket: %s' % (user.id, user.ticket.ticket), 'forget', request)
             DBSession.delete(user.ticket)
 
-        return self.cookie.raw_headers(request, '', max_age=0)
+        return self.cookie.get_headers('', max_age=0)
 
