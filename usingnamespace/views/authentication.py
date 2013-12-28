@@ -12,7 +12,10 @@ from pyramid.security import (
         forget,
         authenticated_userid
         )
-from pyramid.httpexceptions import HTTPSeeOther
+from pyramid.httpexceptions import (
+        HTTPForbidden,
+        HTTPSeeOther,
+        )
 
 from deform import ValidationFailure
 
@@ -84,7 +87,8 @@ class Authentication(object):
         return HTTPSeeOther(location=self.request.route_url('management',
             traverse=''), headers = headers)
 
-    @forbidden_view_config(
+    @view_config(
+            context=HTTPForbidden,
             containment='..traversal.ManagementRoot',
             renderer='string',
             )
