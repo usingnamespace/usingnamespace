@@ -10,7 +10,6 @@ import string
 from pyramid import security
 
 from pyramid.security import (
-        unauthenticated_userid,
         Authenticated,
         Everyone,
     )
@@ -24,7 +23,7 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from authentication import AuthPolicy
 
 def user(request):
-    userid = unauthenticated_userid(request)
+    userid = request.unauthenticated_userid
 
     # Get the current authentication policy
     req = request.registry
