@@ -57,7 +57,7 @@ def includeme(config):
     _authn_policy = AuthPolicy(
             config.registry.settings['pyramid.secret.auth'],
             max_age=864000,
-            http_only=True,
+            httponly=True,
             debug=True,
             hashalg='sha512',
             )
