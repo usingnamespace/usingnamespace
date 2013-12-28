@@ -10,7 +10,6 @@ from pyramid.view import (
 from pyramid.security import (
         remember,
         forget,
-        authenticated_userid
         )
 from pyramid.httpexceptions import (
         HTTPForbidden,
@@ -42,7 +41,7 @@ class Authentication(object):
             renderer='management/authenticate.mako',
             )
     def authenticate(self):
-        if authenticated_userid(self.request) is not None:
+        if self.request.authenticated_userid is not None:
             return HTTPSeeOther(location=self.request.route_url('management',
                 traverse=self.request.session.get('next', '')))
 
@@ -94,7 +93,7 @@ class Authentication(object):
             )
     def forbidden(self):
         # Check to see if a user is already logged in...
-        if authenticated_userid(self.request):
+        if self.request.authenticated_userid:
             request.response.status_int = 403
             return {}
 
