@@ -63,17 +63,11 @@ def main(global_config, **settings):
     # Add in pyramid_mailer for sending out emails
     config.include('pyramid_mailer')
 
-    def cur_domain(request):
-        host = request.host if ":" not in request.host else request.host.split(":")[0]
-
-        return host
-
     def is_management(request):
         if request.matched_route is not None and request.matched_route.name == 'management':
             return True
         return False
 
-    config.add_request_method(callable=cur_domain, name='domain', reify=True)
     config.add_request_method(callable=is_management, name='is_management', reify=True)
     config.add_route_predicate('is_management_domain', predicates.route.Management)
     config.add_subscriber_predicate('is_management', predicates.subscriber.IsManagement)
