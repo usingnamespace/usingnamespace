@@ -40,7 +40,7 @@ class Management(object):
         route_name='management'
         )
 class ManagementNotAuthorized(object):
-    """Antything related to management that is not authorized"""
+    """Anything related to management that is not authorized"""
     def __init__(self, context, request):
         """Initialises the view class
 
