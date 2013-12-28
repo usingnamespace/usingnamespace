@@ -59,6 +59,10 @@ header {
     }
 }
 
+header + div.container {
+    padding-top: 10px;
+}
+
 ul {
     @extend %default-ul;
 }
