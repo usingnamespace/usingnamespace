@@ -4,6 +4,8 @@ log = logging.getLogger(__name__)
 from zope.interface import Interface
 from zope.interface import implementer
 
+from pyramid.compat import string_types
+
 from .entry import SingleEntry as Entry_ctx
 
 from ..models import (
@@ -32,7 +34,7 @@ class ArchiveYear(object):
             self.__name__ = '{}'.format(year)
             self.year = year
 
-        if isinstance(year, basestring):
+        if isinstance(year, string_types):
             self.__name__ = year
 
             try:
@@ -55,7 +57,7 @@ class ArchiveYear(object):
         # Last resort, see if it is a valid month
         try:
             next_ctx = ArchiveYearMonth(key)
-        except ValueError, e:
+        except ValueError:
             next_ctx = None
 
         if next_ctx is None:
@@ -110,7 +112,7 @@ class ArchiveYearMonth(object):
             self.__name__ = '{}'.format(month)
             self.month = month
 
-        if isinstance(month, basestring):
+        if isinstance(month, string_types):
             self.__name__ = month
 
             try:
@@ -191,7 +193,7 @@ class ArchiveYearMonthDay(object):
             self.__name__ = '{}'.format(month)
             self.day = day
 
-        if isinstance(day, basestring):
+        if isinstance(day, string_types):
             self.__name__ = day
 
             try:

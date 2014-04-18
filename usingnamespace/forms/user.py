@@ -4,8 +4,8 @@ _ = TranslationStringFactory('usingnamespace')
 import colander
 import deform
 
-from schemaform import SchemaFormMixin
-from csrf import CSRFSchema
+from .schemaform import SchemaFormMixin
+from .csrf import CSRFSchema
 
 from ..models import User
 

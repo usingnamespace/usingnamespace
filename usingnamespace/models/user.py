@@ -1,6 +1,6 @@
 import datetime
 
-from meta import (
+from .meta import (
         Base,
         DBSession,
         )

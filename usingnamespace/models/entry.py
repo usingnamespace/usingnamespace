@@ -4,7 +4,7 @@
 
 import datetime
 
-from meta import Base
+from .meta import Base
 
 from sqlalchemy import (
         Boolean,
@@ -140,9 +140,9 @@ class Entry(Base):
             Column('slug', Unicode(128), index=True),
             Column('created', DateTime, server_default=text('current_timestamp'), index=True),
             Column('modified', DateTime, server_default=None, server_onupdate=text('current_timestamp'), nullable=True),
-            Column('year', Integer(4), server_default=None, index=True, nullable=True),
-            Column('month', Integer(2), server_default=None, index=True, nullable=True),
-            Column('day', Integer(2), server_default=None, index=True, nullable=True),
+            Column('year', Integer, server_default=None, index=True, nullable=True),
+            Column('month', Integer, server_default=None, index=True, nullable=True),
+            Column('day', Integer, server_default=None, index=True, nullable=True),
             Column('time', Time, nullable=True),
             Column('site_id', Integer, ForeignKey('sites.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
 

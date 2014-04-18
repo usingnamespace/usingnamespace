@@ -6,7 +6,6 @@ from ..views.helpers import URLHelper
 @subscriber(BeforeRender, is_management=False)
 def view_helpers(event):
     if "h" in event:
-        print "Someone else got here before us ..."
         return
 
     h = {}

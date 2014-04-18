@@ -7,7 +7,7 @@ from pyramid.compat import (
         binary_type
         )
 
-from meta import Base
+from .meta import Base
 
 from sqlalchemy import (
         Boolean,
@@ -33,7 +33,7 @@ from sqlalchemy.ext.hybrid import (
 class IdnaComparator(Comparator):
     def __eq__(self, other):
         if isinstance(other, text_type):
-            other = other.encode("idna")
+            other = other.encode('idna').decode('utf-8')
         elif isinstance(other, binary_type):
             other = other
         else:
@@ -53,13 +53,13 @@ class Domain(Base):
     @hybrid_property
     def domain(self):
         if isinstance(self, Domain):
-            return self._domain.decode("idna")
+            return self._domain.decode('idna')
         return self._domain
 
     @domain.setter
     def domain(self, value):
         if isinstance(value, text_type):
-            self._domain = value.encode("idna")
+            self._domain = value.encode('idna').decode('utf-8')
         elif isinstance(value, binary_type):
             self._domain = value
         else:

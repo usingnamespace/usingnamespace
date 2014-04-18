@@ -7,7 +7,7 @@ from pyramid.compat import (
         binary_type
         )
 
-from meta import Base
+from .meta import Base
 
 from sqlalchemy import (
         Boolean,

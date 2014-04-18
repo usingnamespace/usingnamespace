@@ -20,7 +20,7 @@ from pyramid.interfaces import (
 
 from pyramid.authorization import ACLAuthorizationPolicy
 
-from authentication import AuthPolicy
+from .authentication import AuthPolicy
 
 def user(request):
     userid = request.unauthenticated_userid

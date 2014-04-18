@@ -1,8 +1,8 @@
 # Package
 
-from meta import DBSession, Base
+from .meta import DBSession, Base
 
-from entry import (
+from .entry import (
             Entry,
             Revision,
             EntryAuthors,
@@ -12,15 +12,15 @@ from entry import (
             RevisionRendered,
         )
 
-from user import (
+from .user import (
         User,
         UserTickets,
         )
 
-from domain import (
+from .domain import (
             Domain,
         )
 
-from site import (
+from .site import (
             Site,
         )

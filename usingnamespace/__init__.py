@@ -10,11 +10,9 @@ from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy.exc import DBAPIError
 
-from models import DBSession
+from .models import DBSession
 
 from .security.authentication import AuthPolicy
-import predicates.route
-import predicates.subscriber
 
 required_settings = [
         'pyramid.secret.session',
@@ -69,8 +67,8 @@ def main(global_config, **settings):
         return False
 
     config.add_request_method(callable=is_management, name='is_management', reify=True)
-    config.add_route_predicate('is_management_domain', predicates.route.Management)
-    config.add_subscriber_predicate('is_management', predicates.subscriber.IsManagement)
+    config.add_route_predicate('is_management_domain', config.maybe_dotted('.predicates.route.Management'))
+    config.add_subscriber_predicate('is_management', config.maybe_dotted('.predicates.subscriber.IsManagement'))
 
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_static_view('deform_static', 'deform:static', cache_max_age=3600)
