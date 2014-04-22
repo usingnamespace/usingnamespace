@@ -1,3 +1,6 @@
+import logging
+log = logging.getLogger(__name__)
+
 from pyramid.view import (
         view_config,
         view_defaults,
@@ -5,9 +8,10 @@ from pyramid.view import (
         )
 from pyramid.config import not_
 from pyramid.httpexceptions import HTTPForbidden
+from pyramid.security import unauthenticated_userid, authenticated_userid
 
 @view_defaults(
-        context='..traversal.ManagementRoot',
+        context='...traversal.ManagementRoot',
         route_name='management'
         )
 class Management(object):
@@ -28,15 +32,18 @@ class Management(object):
             effective_principals='system.Authenticated',
             )
     def home(self):
+        userid = unauthenticated_userid(self.request)
+        userid_authed = authenticated_userid(self.request)
 
         userinfo = self.request.user
 
+        log.error("Current userid: {} {}".format(userid, userid_authed))
         return {
                 'sites': userinfo.user.sites,
                 }
 
 @view_defaults(
-        containment='..traversal.ManagementRoot',
+        containment='...traversal.ManagementRoot',
         route_name='management'
         )
 class ManagementNotAuthorized(object):
@@ -58,7 +65,7 @@ class ManagementNotAuthorized(object):
         raise HTTPForbidden()
 
     @notfound_view_config(
-            containment='..traversal.ManagementRoot',
+            containment='...traversal.ManagementRoot',
             renderer='string',
             )
     def management_not_found(self):
