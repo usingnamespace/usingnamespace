@@ -5,7 +5,7 @@ from pyramid.config import (
         Configurator,
         not_,
         )
-from pyramid.session import UnencryptedCookieSessionFactoryConfig
+from pyramid.session import SignedCookieSessionFactory
 
 from sqlalchemy import engine_from_config
 from sqlalchemy.exc import DBAPIError
@@ -41,10 +41,10 @@ def main(global_config, **settings):
         exit(-1)
 
     # Create the session factory, we are using the stock one
-    _session_factory = UnencryptedCookieSessionFactoryConfig(
+    _session_factory = SignedCookieSessionFactory(
             settings['pyramid.secret.session'],
-            cookie_httponly=True,
-            cookie_max_age=864000
+            httponly=True,
+            max_age=864000
             )
 
     config.set_session_factory(_session_factory)
