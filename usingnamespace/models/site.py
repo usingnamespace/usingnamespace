@@ -55,7 +55,7 @@ class Site(Base):
     @hybrid_property
     def idna(self):
         if isinstance(self, Site):
-            return self._idna.decode("idna")
+            return self._idna.encode('ascii').decode("idna")
         return self._idna
 
     @idna.setter

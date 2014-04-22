@@ -53,7 +53,7 @@ class Domain(Base):
     @hybrid_property
     def domain(self):
         if isinstance(self, Domain):
-            return self._domain.decode('idna')
+            return self._domain.encode('ascii').decode('idna')
         return self._domain
 
     @domain.setter

@@ -34,6 +34,9 @@ defaults = {
                 (u'test.alexandra.network.lan', u'whatever'),
                 (u'whatever.alexandra.network.lan', u'test'),
                 (u'\u4f60\u597d.alexandra.network.lan', u'Ni Hao'),
+                (u'test.sterling.local', u'whatever'),
+                (u'test2.sterling.local', u'test'),
+                (u'test3.sterling.local', u'Ni Hao'),
                 ],
             'entries': [
                 # Title, entry, slug, user, tags, published
@@ -71,7 +74,7 @@ def main(argv=sys.argv):
                 DBSession.flush()
             except IntegrityError:
                 sp.rollback()
-                print u'Username "{}" already exists.'.format(u)
+                print(u'Username "{}" already exists.'.format(u))
 
         for (t, d) in defaults['tags']:
             sp = transaction.savepoint()
@@ -81,7 +84,7 @@ def main(argv=sys.argv):
                 DBSession.flush()
             except IntegrityError:
                 sp.rollback()
-                print u'Tag "{}" already exists.'.format(t)
+                print(u'Tag "{}" already exists.'.format(t))
 
         for (t, i, tag, o) in defaults['sites']:
             sp = transaction.savepoint()
@@ -93,7 +96,7 @@ def main(argv=sys.argv):
                 DBSession.flush()
             except IntegrityError:
                 sp.rollback()
-                print u'Site "{}" already exists.'.format(t)
+                print(u'Site "{}" already exists.'.format(t))
 
         for (d, s) in defaults['domains']:
             sp = transaction.savepoint()
@@ -104,7 +107,7 @@ def main(argv=sys.argv):
                 DBSession.flush()
             except IntegrityError:
                 sp.rollback()
-                print u'Domain "{}" already exists.'.format(d)
+                print(u'Domain "{}" already exists.'.format(d))
 
         for (t, e, s, u, ta, d, p) in defaults['entries']:
             sp = transaction.savepoint()
@@ -112,7 +115,7 @@ def main(argv=sys.argv):
                 insert_new_rev_entry(t, e, s, u, ta, d, published=p)
             except IntegrityError:
                 sp.rollback()
-                print u'Entry "{}" already exists.'.format(t)
+                print(u'Entry "{}" already exists.'.format(t))
 
 
 def insert_new_rev_entry(title, entry, slug, user, tags, site, published=False):
