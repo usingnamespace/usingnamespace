@@ -4,10 +4,10 @@ _ = TranslationStringFactory('usingnamespace')
 import colander
 import deform
 
-from .schemaform import SchemaFormMixin
-from .csrf import CSRFSchema
+from ...forms.schemaform import SchemaFormMixin
+from ...forms.csrf import CSRFSchema
 
-from ..models import User
+from ...models import User
 
 @colander.deferred
 def login_username_password(node, kw):

@@ -22,7 +22,7 @@ from ..forms.user import (
         LoginForm,
         )
 
-@view_defaults(context='..traversal.ManagementRoot', route_name='management')
+@view_defaults(context='..traversal.Root', route_name='management')
 class Authentication(object):
     """Authentication provides views for things related to authentication"""
 
@@ -88,7 +88,7 @@ class Authentication(object):
 
     @view_config(
             context=HTTPForbidden,
-            containment='..traversal.ManagementRoot',
+            containment='..traversal.Root',
             renderer='string',
             )
     def forbidden(self):

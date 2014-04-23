@@ -59,26 +59,15 @@ def main(global_config, **settings):
     # Add in pyramid_mailer for sending out emails
     config.include('pyramid_mailer')
 
-    def is_management(request):
-        if request.matched_route is not None and request.matched_route.name == 'management':
-            return True
-        return False
+    # Add in the API...
+    config.include('.api')
 
-    config.add_request_method(callable=is_management, name='is_management', reify=True)
-    config.add_route_predicate('is_management_domain', config.maybe_dotted('.predicates.route.Management'))
-    config.add_subscriber_predicate('is_management', config.maybe_dotted('.predicates.subscriber.IsManagement'))
+    # Add in the Management interface...
+    config.include('.management')
 
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_static_view('deform_static', 'deform:static', cache_max_age=3600)
     config.add_static_view('files', config.registry.settings['usingnamespace.upload_path'], cache_max_age=3600)
-
-    # Used so that in the future we can set up a route for the management interface seperately
-    config.add_route('management',
-            '/*traverse',
-            use_global_views=False,
-            factory='.traversal.ManagementRoot',
-            is_management_domain=config.registry.settings['usingnamespace.management.domain']
-            )
 
     config.add_route('main',
             '/*traverse',
