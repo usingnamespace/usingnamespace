@@ -59,6 +59,9 @@ def main(global_config, **settings):
     # Add in pyramid_mailer for sending out emails
     config.include('pyramid_mailer')
 
+    # Add in the API...
+    config.include('.api')
+
     def is_management(request):
         if request.matched_route is not None and request.matched_route.name == 'management':
             return True
