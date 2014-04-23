@@ -123,7 +123,7 @@ class AuthPolicy(object):
         ticket = UserTickets.find_ticket_userid(ticket, principal)
 
         if ticket is None:
-            self.cookie.set_cookie(request, '', max_age=0)
+            self.cookie.set_cookies(request.response, '', max_age=0)
 
         return ticket
 
