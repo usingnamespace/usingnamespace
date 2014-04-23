@@ -11,8 +11,8 @@ from pyramid.httpexceptions import HTTPForbidden
 from pyramid.security import unauthenticated_userid, authenticated_userid
 
 @view_defaults(
-        context='...traversal.ManagementRoot',
-        route_name='management'
+        context='..traversal.Root',
+        route_name='management',
         )
 class Management(object):
     """Provide all of the views for the main page of management"""
@@ -43,8 +43,8 @@ class Management(object):
                 }
 
 @view_defaults(
-        containment='...traversal.ManagementRoot',
-        route_name='management'
+        containment='..traversal.Root',
+        route_name='management',
         )
 class ManagementNotAuthorized(object):
     """Anything related to management that is not authorized"""
@@ -65,7 +65,7 @@ class ManagementNotAuthorized(object):
         raise HTTPForbidden()
 
     @notfound_view_config(
-            containment='...traversal.ManagementRoot',
+            containment='..traversal.Root',
             renderer='string',
             )
     def management_not_found(self):
