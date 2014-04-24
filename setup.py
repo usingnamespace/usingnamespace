@@ -61,6 +61,8 @@ setup(name='usingnamespace',
       entry_points="""\
       [paste.app_factory]
       main = usingnamespace:main
+      api  = usingnamespace.api:main
+      management = usingnamespace.management:main
       [console_scripts]
       usingnamespace_init_db = usingnamespace.scripts.initializedb:main
       usingnamespace_destroy_db = usingnamespace.scripts.destroydb:main
