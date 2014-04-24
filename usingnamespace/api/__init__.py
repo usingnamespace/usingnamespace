@@ -27,7 +27,7 @@ def includeme(config):
     config.registry.settings.update(settings)
     
     # Create the application
-    application = make_application(config.registry.settings, config.registry)
+    application = make_sub_application(config.registry.settings, config.registry)
 
     # Add the API route
     route_kw = {}
@@ -43,10 +43,18 @@ def includeme(config):
     # Add the API view
     config.add_view(wsgiapp2(application), route_name='usingnamespace.api')
 
-def make_application(settings, parent_registry):
+def make_sub_application(settings, parent_registry):
     config = Configurator()
     config.registry.settings.update(settings)
     config.registry.parent_registry = parent_registry
+
+    make_application(config)
+
+    return config.make_wsgi_app()
+
+def make_application(config):
+    # Include the transaction manager
+    config.include('pyramid_tm')
 
     def is_api(request):
         if request.matched_route is not None and request.matched_route.name == 'usingnamespace.api.main':
@@ -64,7 +72,25 @@ def make_application(settings, parent_registry):
 
     config.scan('.views')
 
-    return config.make_wsgi_app()
+def main(global_config, **app_settings):
+    from sqlalchemy import engine_from_config
+    from sqlalchemy.exc import DBAPIError
 
-def main(global_config, **settings):
-    pass
+    from ..models import DBSession
+
+    settings = global_config.copy()
+    settings.update(app_settings)
+
+    engine = engine_from_config(settings, 'sqlalchemy.')
+    DBSession.configure(bind=engine)
+    config = Configurator(settings=settings)
+
+    # Go parse the settings
+    settings = parse_settings(config.registry.settings)
+
+    # Update the config
+    config.registry.settings.update(settings)
+
+    make_application(config)
+
+    return config.make_wsgi_app()
