@@ -1,11 +1,7 @@
 import logging
 log = logging.getLogger(__name__)
 
-from pyramid.config import (
-        Configurator,
-        not_,
-        )
-from pyramid.session import SignedCookieSessionFactory
+from pyramid.config import Configurator
 
 from sqlalchemy import engine_from_config
 from sqlalchemy.exc import DBAPIError
@@ -13,16 +9,16 @@ from sqlalchemy.exc import DBAPIError
 from .models import DBSession
 
 required_settings = [
-        'pyramid.secret.session',
-        'pyramid.secret.auth',
-        'usingnamespace.upload_path',
-        'usingnamespace.management.domain',
         'usingnamespace.name',
         ]
 
-def main(global_config, **settings):
+def main(global_config, **app_settings):
     """ This function returns a Pyramid WSGI application.
     """
+
+    settings = global_config.copy()
+    settings.update(app_settings)
+
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     config = Configurator(settings=settings, root_factory='.traversal.MainRoot')
@@ -49,6 +45,8 @@ def main(global_config, **settings):
 
     # Include our security stuff
     config.include('.security')
+    # Include the transaction manager
+    config.include('pyramid_tm')
 
     # We use mako for template rendering
     config.include('pyramid_mako')
