@@ -34,17 +34,6 @@ def main(global_config, **app_settings):
         log.error('Unable to start due to missing configuration')
         exit(-1)
 
-    # Create the session factory, we are using the stock one
-    _session_factory = SignedCookieSessionFactory(
-            settings['pyramid.secret.session'],
-            httponly=True,
-            max_age=864000
-            )
-
-    config.set_session_factory(_session_factory)
-
-    # Include our security stuff
-    config.include('.security')
     # Include the transaction manager
     config.include('pyramid_tm')
 
