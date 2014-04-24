@@ -1,14 +1,16 @@
-usingnamespace README
-==================
+usingnamespace 
+==============
 
 Getting Started
 ---------------
 
+- Create new virtualenv, located at $venv
+
 - cd <directory containing this file>
 
-- $venv/bin/python setup.py develop
+- $venv/bin/pip install -e .[develop]
 
-- $venv/bin/initialize_usingnamespace_db development.ini
+- $venv/bin/usingnamespace_init_db config/development.ini
 
-- $venv/bin/pserve development.ini
+- $venv/bin/pserve --reload config/development.ini
 
