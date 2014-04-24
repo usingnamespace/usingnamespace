@@ -18,7 +18,7 @@ from pyramid.security import (
 
 from webob.cookies import SignedCookieProfile as CookieHelper
 
-from ..models import (
+from ...models import (
         DBSession,
         User,
         UserTickets,
@@ -76,11 +76,9 @@ class AuthPolicy(object):
     def unauthenticated_userid(self, request):
         """ The userid key within the auth_tkt cookie."""
 
-        debug = self.debug
-
         result = self.cookie.bind(request).get_value()
 
-        debug and self._log('Got result from cookie: %s' % (result,), 'unauthenticated_userid', request)
+        self.debug and self._log('Got result from cookie: %s' % (result,), 'unauthenticated_userid', request)
 
         if result:
             principal = result['principal']
@@ -103,15 +101,13 @@ class AuthPolicy(object):
             return principal
 
     def authenticated_userid(self, request):
-        """ Return the authenticated userid or ``None``.
-
-        """
+        """ Return the authenticated userid or ``None``."""
         userid = request.user.id
 
         return userid
 
     def find_user_ticket(self, request):
-        """ Return the user object if valid for the ticket or ``None``. """
+        """ Return the user object if valid for the ticket or ``None``."""
 
         auth = request.state.get('auth', {})
         ticket = auth.get('ticket', '')
@@ -123,6 +119,7 @@ class AuthPolicy(object):
         ticket = UserTickets.find_ticket_userid(ticket, principal)
 
         if ticket is None:
+            self.debug and self._log('No ticket found', 'find_user_ticket', request)
             self.cookie.set_cookies(request.response, '', max_age=0)
 
         return ticket
