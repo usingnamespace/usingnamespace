@@ -15,7 +15,8 @@ from ..models import *
 
 defaults = {
             'users': [
-                (u'xistence@0x58.com', u'Bert JW Regeer', 'test')
+                (u'xistence@0x58.com', u'Bert JW Regeer', 'test'),
+                (u'test@0x58.com', u'Test Testing', 'test'),
                 ],
             'tags': [
                 (u'c++', "The C++ programming language"),
@@ -29,14 +30,16 @@ defaults = {
                 (u'test', u'A simple test', "xistence@0x58.com"),
                 (u'howdy', u'Another very simple test', "xistence@0x58.com"),
                 (u'\u4f60\u597d', u'A blog detailing my ventures in China', "xistence@0x58.com"),
+                (u'howdy', u'Another very simple test', "test@0x58.com"),
                 ],
             'domains': [
-                (u'test.alexandra.network.lan', u'whatever'),
-                (u'whatever.alexandra.network.lan', u'test'),
-                (u'\u4f60\u597d.alexandra.network.lan', u'\u4f60\u597d'),
-                (u'test.sterling.local', u'whatever'),
-                (u'test2.sterling.local', u'test'),
-                (u'test3.sterling.local', u'\u4f60\u597d'),
+                (u'test.alexandra.network.lan', u'whatever', "xistence@0x58.com"),
+                (u'whatever.alexandra.network.lan', u'test', "xistence@0x58.com"),
+                (u'\u4f60\u597d.alexandra.network.lan', u'\u4f60\u597d', "xistence@0x58.com"),
+                (u'test.sterling.local', u'whatever', "xistence@0x58.com"),
+                (u'test2.sterling.local', u'test', "xistence@0x58.com"),
+                (u'test3.sterling.local', u'\u4f60\u597d', "xistence@0x58.com"),
+                (u'howdy.alexandra.network.lan', u'howdy', "test@0x58.com"),
                 ],
             'entries': [
                 # Title, entry, slug, user, tags, published
@@ -98,11 +101,12 @@ def main(argv=sys.argv):
                 sp.rollback()
                 print(u'Site "{}" already exists.'.format(t))
 
-        for (d, s) in defaults['domains']:
+        for (d, s, o) in defaults['domains']:
             sp = transaction.savepoint()
             try:
-                domain = Domain(domain = d, site =
-                        DBSession.query(Site).filter(Site.title == s).first())
+                owner = DBSession.query(User).filter(User.email == o).first()
+                site = DBSession.query(Site).filter(Site.title == s).filter(Site.owner == owner).first()
+                domain = Domain(domain = d, site = site)
                 DBSession.add(domain)
                 DBSession.flush()
             except IntegrityError:
