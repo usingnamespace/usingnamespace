@@ -6,7 +6,7 @@
 <p>You have the following sites: </p>
 <ul>
     % for site in sites:
-    <li>${site.title} (${site.idna})
+    <li>${site.title}
     <p>Entries:
     <ul>
         % for entry in site.entries.limit(2):
