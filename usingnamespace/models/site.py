@@ -19,6 +19,7 @@ from sqlalchemy import (
         Table,
         Unicode,
         UniqueConstraint,
+        Index,
         )
 
 from sqlalchemy.orm import (
@@ -44,10 +45,13 @@ class IdnaComparator(Comparator):
 class Site(Base):
     __table__ = Table('sites', Base.metadata,
             Column('id', Integer, primary_key=True, index=True),
-            Column('idna', String(128), unique=True, index=True),
+            Column('idna', String(128), index=True),
             Column('title', String(256)),
             Column('tagline', String(256)),
             Column('owner_id', Integer, ForeignKey('users.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
+
+            UniqueConstraint('idna', 'owner_id'),
+            Index('idx_idna_owner', 'idna', 'owner_id'),
             )
 
     _idna = __table__.c.idna
