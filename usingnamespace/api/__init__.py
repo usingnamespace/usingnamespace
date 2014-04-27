@@ -64,7 +64,7 @@ def make_application(config):
     config.add_request_method(callable=is_api, name='is_api', reify=True)
     config.add_subscriber_predicate('is_api', config.maybe_dotted('.predicates.subscriber.IsAPI'))
 
-    config.add_route('usingnamespace.api.main',
+    config.add_route('api',
             '/*traverse',
             factory='.traversal.Root',
             use_global_views=False,
