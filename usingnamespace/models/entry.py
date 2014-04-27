@@ -146,7 +146,7 @@ class Entry(Base):
             Column('time', Time, nullable=True),
             Column('site_id', Integer, ForeignKey('sites.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
 
-            UniqueConstraint('year', 'month', 'day', 'slug'),
+            UniqueConstraint('year', 'month', 'day', 'slug', 'site_id'),
             Index('idx_year_month_day', 'year', 'month', 'day'),
             Index('idx_year_month', 'year', 'month'),
             )
