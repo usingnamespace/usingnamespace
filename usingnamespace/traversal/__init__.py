@@ -8,14 +8,10 @@ from .archive import (
         )
 
 from .entry import (
-        SingleEntry,
+        Entry
         )
 
-from ..models import (
-            DBSession,
-            Domain,
-            Entry,
-        )
+from .. import models as m
 
 class MainRoot(object):
     """The usingnamespace root factory
@@ -78,13 +74,13 @@ class MainRoot(object):
         :returns: None
         """
 
-        self.curdomain = DBSession.query(Domain) \
-                .filter(Domain.domain == self._request.domain) \
+        self.curdomain = m.DBSession.query(m.Domain) \
+                .filter(m.Domain.domain == self._request.domain) \
                 .first()
 
         if self.curdomain is not None:
-            self.entries = DBSession.query(Entry) \
-                    .filter(Entry.site == self.curdomain.site)
+            self.entries = m.DBSession.query(m.Entry) \
+                    .filter(m.Entry.site == self.curdomain.site)
             return None
         else:
             raise ValueError

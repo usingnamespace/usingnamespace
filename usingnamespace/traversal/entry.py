@@ -1,11 +1,9 @@
 import logging
 log = logging.getLogger(__name__)
 
-from ..models import (
-            Entry,
-        )
+from .. import models as m
 
-class SingleEntry(object):
+class Entry(object):
     """The leaf node for an entry"""
 
     __parent__ = None
@@ -33,7 +31,7 @@ class SingleEntry(object):
 
             # Get the entries variable from the parent
             self.entries = self.__parent__.entries
-            self.entries = self.entries.filter(Entry.slug == self.__name__)
+            self.entries = self.entries.filter(m.Entry.slug == self.__name__)
         else:
             # We need a parent ...
             raise ValueError

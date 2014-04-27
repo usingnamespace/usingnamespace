@@ -6,11 +6,9 @@ from zope.interface import implementer
 
 from pyramid.compat import string_types
 
-from .entry import SingleEntry as Entry_ctx
+from .entry import Entry
 
-from ..models import (
-            Entry,
-        )
+from .. import models as m
 
 class IArchive(Interface):
     """Marker interface for archive contexts"""
@@ -80,7 +78,7 @@ class ArchiveYear(object):
 
             # Get the entries variable from the parent
             self.entries = self.__parent__.entries
-            self.entries = self.entries.filter(Entry.year == self.year)
+            self.entries = self.entries.filter(m.Entry.year == self.year)
         else:
             # We need a parent ...
             raise ValueError
@@ -161,7 +159,7 @@ class ArchiveYearMonth(object):
 
             # Get the entries variable from the parent
             self.entries = self.__parent__.entries
-            self.entries = self.entries.filter(Entry.month == self.month)
+            self.entries = self.entries.filter(m.Entry.month == self.month)
         else:
             # We need a parent ...
             raise ValueError
@@ -218,7 +216,7 @@ class ArchiveYearMonthDay(object):
 
         # Last resort, see if it is a valid slug
         try:
-            next_ctx = Entry_ctx(key)
+            next_ctx = Entry(key)
         except ValueError:
             next_ctx = None
 
@@ -242,7 +240,7 @@ class ArchiveYearMonthDay(object):
 
             # Get the entries variable from the parent
             self.entries = self.__parent__.entries
-            self.entries = self.entries.filter(Entry.day == self.day)
+            self.entries = self.entries.filter(m.Entry.day == self.day)
         else:
             # We need a parent ...
             raise ValueError
