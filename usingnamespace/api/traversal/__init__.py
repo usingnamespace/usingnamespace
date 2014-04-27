@@ -1,10 +1,12 @@
 import logging
 log = logging.getLogger(__name__)
 
+from .v1 import Root as v1Root
+
 class Root(object):
     """Root
 
-    The main root object for any API traversal
+    The main root object for v1 API traversal
     """
 
     __name__ = None
@@ -20,4 +22,14 @@ class Root(object):
 
     def __getitem__(self, key):
         """Check to see if we can traverse this ..."""
-        raise KeyError
+
+        next_ctx = None
+
+        if key == 'v1':
+            next_ctx = v1Root(self._request)
+
+        if next_ctx is None:
+            raise KeyError
+        else:
+            next_ctx.__parent__ = self
+            return next_ctx
