@@ -1,4 +1,4 @@
-# Package
+from .site import Site
 
 from .... import models as m
 
@@ -24,7 +24,9 @@ class Root(object):
 
         next_ctx = None
 
-        if key == 'v1':
+        try:
+            next_ctx = Site(key)
+        except ValueError:
             next_ctx = None
 
         if next_ctx is None:
