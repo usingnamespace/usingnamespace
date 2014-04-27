@@ -39,4 +39,4 @@ class Root(object):
         :returns: None
         """
 
-        self.sites = m.DBSession.query(m.Sites)
+        self.sites = m.DBSession.query(m.Site)
