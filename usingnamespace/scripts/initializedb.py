@@ -25,18 +25,18 @@ defaults = {
                 (u'not used', "Don't look at me that way"),
                 ],
             'sites': [
-                (u'whatever', u'whatever', u'Everything and anything', "xistence@0x58.com"),
-                (u'test', u'test', u'A simple test', "xistence@0x58.com"),
-                (u'howdy', u'howdy', u'Another very simple test', "xistence@0x58.com"),
-                (u'Ni Hao', u'\u4f60\u597d', u'A blog detailing my ventures in China', "xistence@0x58.com"),
+                (u'whatever', u'Everything and anything', "xistence@0x58.com"),
+                (u'test', u'A simple test', "xistence@0x58.com"),
+                (u'howdy', u'Another very simple test', "xistence@0x58.com"),
+                (u'\u4f60\u597d', u'A blog detailing my ventures in China', "xistence@0x58.com"),
                 ],
             'domains': [
                 (u'test.alexandra.network.lan', u'whatever'),
                 (u'whatever.alexandra.network.lan', u'test'),
-                (u'\u4f60\u597d.alexandra.network.lan', u'Ni Hao'),
+                (u'\u4f60\u597d.alexandra.network.lan', u'\u4f60\u597d'),
                 (u'test.sterling.local', u'whatever'),
                 (u'test2.sterling.local', u'test'),
-                (u'test3.sterling.local', u'Ni Hao'),
+                (u'test3.sterling.local', u'\u4f60\u597d'),
                 ],
             'entries': [
                 # Title, entry, slug, user, tags, published
@@ -86,10 +86,10 @@ def main(argv=sys.argv):
                 sp.rollback()
                 print(u'Tag "{}" already exists.'.format(t))
 
-        for (t, i, tag, o) in defaults['sites']:
+        for (t, tag, o) in defaults['sites']:
             sp = transaction.savepoint()
             try:
-                site = Site(title = t, idna = i, tagline = tag, owner =
+                site = Site(title = t, tagline = tag, owner =
                         DBSession.query(User).filter(User.email ==
                             o).first())
                 DBSession.add(site)
