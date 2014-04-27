@@ -13,7 +13,7 @@ from .finalisecontext import FinaliseContext
 
 class Entry(FinaliseContext):
 
-    @view_config(context='..traversal.SingleEntry', renderer='permapage.mako')
+    @view_config(context='..traversal.Entry', renderer='permapage.mako')
     def single(self):
         return {
                 'post': self.context.entry,
