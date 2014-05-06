@@ -15,6 +15,7 @@ from .entry import (
 from .user import (
         User,
         UserTickets,
+        UserAPITickets,
         )
 
 from .domain import (
