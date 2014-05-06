@@ -1,6 +1,6 @@
 <%inherit file="site.mako" />
 
-<div "page-header"><h1>My Sites</h1></div>
+<div id="page-header"><h1>My Sites</h1></div>
 
 % if sites:
 <p>You have the following sites: </p>
