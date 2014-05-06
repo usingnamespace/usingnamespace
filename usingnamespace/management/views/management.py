@@ -83,4 +83,4 @@ class ManagementNotAuthorized(object):
             )
     def management_not_found(self):
         self.request.response.status_int = 404
-        return {}
+        return "404 - Not Found"
