@@ -10,6 +10,8 @@ from pyramid.config import not_
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.security import unauthenticated_userid, authenticated_userid
 
+from ...api.ticket import APITicket
+
 @view_defaults(
         context='..traversal.Root',
         route_name='management',
@@ -37,6 +39,21 @@ class Management(object):
         return {
                 'sites': userinfo.user.sites,
                 }
+
+    @view_config(
+            name='api',
+            renderer='templates/api.mako',
+            effective_principals='system.Authenticated',
+            )
+    def api(self):
+        api_tickets = APITicket().find_existing(self.request.user.user.email)
+
+        print(api_tickets)
+
+        return {
+                'tickets': api_tickets
+                }
+
 
 @view_defaults(
         containment='..traversal.Root',
