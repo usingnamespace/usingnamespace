@@ -47,7 +47,7 @@ def includeme(config):
 
     config.add_route_predicate('is_management_domain', config.maybe_dotted('.predicates.route.Management'))
     config.add_route('usingnamespace.management',
-            config.registry.settings['usingnamespace.management.route_path'] + '/*subpath', 
+            config.registry.settings['usingnamespace.management.route_path'] + '/*subpath',
             **route_kw)
 
     # Add the management view
@@ -65,6 +65,18 @@ def make_sub_application(settings, parent_registry):
 
 def make_application(config):
     settings = config.registry.settings
+
+    do_start = True
+
+    for _req in required_settings:
+        if _req not in settings:
+            log.error('{} is not set in configuration file.'.format(_req))
+            do_start = False
+
+    if do_start is False:
+        log.error('Unable to start due to missing configuration')
+        exit(-1)
+
     # Include the transaction manager
     config.include('pyramid_tm')
 
