@@ -66,10 +66,10 @@ class PublishedDateTimeComparator(CompositeProperty.Comparator):
                             other.__composite_values__())])
 
     def desc(self):
-        return sql.desc(', '.join(map(str, self.__clause_element__().clauses)))
+        return ', '.join(map(str, (map(sql.desc, map(str, self.__clause_element__().clauses)))))
 
     def asc(self):
-        return sql.asc(', '.join(map(str, self.__clause_element__().clauses)))
+        return ', '.join(map(str, (map(sql.asc, map(str, self.__clause_element__().clauses)))))
 
 class PublishedDateTime(MutableComposite):
     def __init__(self, year, month, day, time):
