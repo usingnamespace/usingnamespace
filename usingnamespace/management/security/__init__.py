@@ -1,9 +1,3 @@
-# Package
-
-# File: auth.py
-# Author: Bert JW Regeer <bertjw@regeer.org>
-# Created: 2013-02-08
-
 import random
 import string
 
