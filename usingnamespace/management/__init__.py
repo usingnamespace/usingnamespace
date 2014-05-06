@@ -89,6 +89,9 @@ def make_application(config):
     # Include pyramid_mailer
     config.include('pyramid_mailer')
 
+    # Include the API ticket required stuff
+    config.include('..api.ticket')
+
     # Create the session factory, we are using the stock one
     _session_factory = SignedCookieSessionFactory(
             settings['pyramid.secret.session'],
