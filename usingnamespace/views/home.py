@@ -10,7 +10,7 @@ from ..models import (
 from .finalisecontext import FinaliseContext
 
 class Home(FinaliseContext):
-    @view_config(context='..traversal.MainRoot', renderer='chronological.mako')
+    @view_config(context='..traversal.MainRoot', renderer='templates/chronological.mako')
     def main(self):
         # Get the latest 10 entries that are published
 
