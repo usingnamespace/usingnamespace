@@ -83,7 +83,7 @@ class AuthPolicy(object):
         if result:
             principal = result['principal']
             if _clean_principal(principal) is None:
-                debug and self._log('use of principal %r is disallowed by any '
+                self.debug and self._log('use of principal %r is disallowed by any '
                         'built-in Pyramid security policy, returning None' %
                         principal)
                 return None
