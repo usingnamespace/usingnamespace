@@ -28,7 +28,7 @@ class Management(object):
         self.request = request
 
     @view_config(
-            renderer='management/home.mako',
+            renderer='templates/home.mako',
             effective_principals='system.Authenticated',
             )
     def home(self):

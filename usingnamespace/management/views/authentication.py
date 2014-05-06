@@ -38,7 +38,7 @@ class Authentication(object):
 
     @view_config(
             name='auth',
-            renderer='management/authenticate.mako',
+            renderer='templates/authenticate.mako',
             )
     def authenticate(self):
         if self.request.authenticated_userid is not None:
@@ -53,7 +53,7 @@ class Authentication(object):
 
     @view_config(
             name='auth',
-            renderer='management/authenticate.mako',
+            renderer='templates/authenticate.mako',
             request_method='POST',
             )
     def authenticate_submit(self):
