@@ -32,12 +32,8 @@ class Management(object):
             effective_principals='system.Authenticated',
             )
     def home(self):
-        userid = unauthenticated_userid(self.request)
-        userid_authed = authenticated_userid(self.request)
-
         userinfo = self.request.user
 
-        log.error("Current userid: {} {}".format(userid, userid_authed))
         return {
                 'sites': userinfo.user.sites,
                 }
