@@ -1,6 +1,13 @@
+import logging
+log = logging.getLogger(__name__)
+
 from pyramid.config import Configurator
 from pyramid.wsgi import wsgiapp2
 from pyramid.settings import asbool
+
+required_settings = [
+        'pyramid.secret.auth',
+        ]
 
 default_settings = (
     ('route_path', str, '/api'),
@@ -53,6 +60,18 @@ def make_sub_application(settings, parent_registry):
     return config.make_wsgi_app()
 
 def make_application(config):
+    settings = config.registry.settings
+    do_start = True
+
+    for _req in required_settings:
+        if _req not in settings:
+            log.error('{} is not set in configuration file.'.format(_req))
+            do_start = False
+
+    if do_start is False:
+        log.error('Unable to start due to missing configuration')
+        exit(-1)
+
     # Include the transaction manager
     config.include('pyramid_tm')
 
