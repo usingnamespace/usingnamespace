@@ -23,6 +23,7 @@
                 <ul>
                     <%block name="nav">
                     <li><a href="${request.route_url('management', traverse='')}">Home</a></li>
+                    <li><a href="${request.route_url('management', traverse='api')}">API Tickets</a></li>
                     <li><a href="${request.route_url('management', traverse='deauth')}">Deauth</a></li>
                     </%block>
                 </ul>
