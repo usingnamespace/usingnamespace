@@ -1,9 +1,16 @@
-from pyramid.view import view_config
+from pyramid.view import (
+        view_config,
+        view_defaults,
+        )
 
 from ....views.finalisecontext import FinaliseContext
 
+@view_defaults(context='...traversal.v1.Site',
+        route_name='api',
+        renderer='json',
+        )
 class Site(FinaliseContext):
-    @view_config(context='...traversal.v1.Site', route_name='api', renderer='json')
+    @view_config()
     def main(self):
         entries = []
 
