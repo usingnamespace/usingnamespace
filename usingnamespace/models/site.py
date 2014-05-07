@@ -34,7 +34,7 @@ class Site(Base):
             Column('id', Integer, primary_key=True, index=True),
             Column('title', String(256)),
             Column('tagline', String(256)),
-            Column('owner_id', Integer, ForeignKey('users.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
+            Column('owner_id', Integer, ForeignKey('users.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
             )
 
     owner = relationship("User", backref="sites")
