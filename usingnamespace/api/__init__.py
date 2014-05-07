@@ -90,6 +90,7 @@ def make_application(config):
             )
 
     config.include('.ticket')
+    config.include('.security')
     config.scan('.views')
 
 def main(global_config, **app_settings):
