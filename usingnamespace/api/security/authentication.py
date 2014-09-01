@@ -106,12 +106,11 @@ class AuthPolicy(object):
 
         auth = request.state.get('auth', {})
         ticket = auth.get('ticket', '')
-        principal = auth.get('principal', '')
 
-        if not ticket or not principal:
+        if not ticket:
             return None
 
-        ticket = UserAPITickets.find_ticket_userid(ticket, principal)
+        ticket = UserAPITickets.find_ticket(ticket)
 
         if ticket is None:
             self.debug and self._log('No ticket found', 'find_user_ticket', request)
