@@ -58,7 +58,8 @@ class AuthPolicy(object):
         self.debug = debug
 
     def unauthenticated_userid(self, request):
-        """ The userid key within the auth_tkt cookie."""
+        """ No support for the unauthenticated userid """
+        return None
 
         result = _get_auth_header(request)
 
