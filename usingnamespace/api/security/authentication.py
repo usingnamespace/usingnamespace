@@ -61,35 +61,45 @@ class AuthPolicy(object):
         """ No support for the unauthenticated userid """
         return None
 
+    def authenticated_userid(self, request):
+        """ Return the authenticated userid or ``None``."""
+
+        try:
+            return request.state['auth']['userinfo'].id
+        except:
+            pass
+
         result = _get_auth_header(request)
 
         self.debug and self._log('Got result from x-api-ticket: %s' % (result,), 'unauthenticated_userid', request)
 
         if result:
-            principal = result['principal']
-            if _clean_principal(principal) is None:
-                self.debug and self._log('use of principal %r is disallowed by any '
-                        'built-in Pyramid security policy, returning None' %
-                        principal)
+            request.state['auth'] = {}
+            request.state['auth']['ticket'] = result
+            ticket = self.find_user_ticket(request)
+
+            
+            class UserInfo(object):
+                def __init__(self):
+                    self.id = None
+                    self.auth = {}
+                    self.user = None
+                    self.ticket = None
+
+            userinfo = UserInfo()
+
+            request.state['auth']['userinfo'] = userinfo
+
+            if ticket is None:
                 return None
 
-            auth = {'principal': principal}
+            userinfo.id = ticket.user.email
+            userinfo.user = ticket.user
+            userinfo.ticket = ticket
 
-            if 'tokens' in result:
-                auth['tokens'] = result['tokens']
-
-            if 'auth_ticket' in result:
-                auth['ticket'] = result['auth_ticket']
-
-            request.state['auth'] = auth
-
-            return principal
-
-    def authenticated_userid(self, request):
-        """ Return the authenticated userid or ``None``."""
-        userid = request.user.id
-
-        return userid
+            return userinfo.id
+        else:
+            return None
 
     def find_user_ticket(self, request):
         """ Return the user object if valid for the ticket or ``None``."""
