@@ -24,8 +24,6 @@ from ...models import (
         UserAPITickets,
         )
 
-from ..interfaces import ISerializer
-
 def _clean_principal(princid):
     """ Utility function that cleans up the passed in principal
 
@@ -37,10 +35,8 @@ def _clean_principal(princid):
     return princid
 
 def _get_auth_header(request):
-    serializer = request.registry.queryUtility(ISerializer, 'apiticket')
-
     try:
-        return serializer.loads(request.headers['x-api-ticket'])
+        return request.headers['x-api-ticket']
     except:
         return None
 
