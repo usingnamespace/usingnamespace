@@ -17,34 +17,9 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from .authentication import AuthPolicy
 
 def user(request):
-    userid = request.unauthenticated_userid
-
-    # Get the current authentication policy
-    req = request.registry
-    policy = req.queryUtility(IAuthenticationPolicy)
-    if policy is None:
-        return None
-
-    # Have the authentication policy find the information for us
-    ticket = policy.find_user_ticket(request)
-
-    class UserInfo(object):
-        def __init__(self):
-            self.id = None
-            self.auth = {}
-            self.user = None
-            self.ticket = None
-
-    userinfo = UserInfo()
-
-    if ticket is None:
-        return userinfo
-
-    userinfo.id = ticket.user.email
-    userinfo.user = ticket.user
-    userinfo.ticket = ticket
-
-    return userinfo
+    userid = request.authenticated_userid
+    
+    return request.state['auth']['userinfo']
 
 def includeme(config):
     _authn_policy = AuthPolicy(
