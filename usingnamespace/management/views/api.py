@@ -16,6 +16,10 @@ from pyramid.security import (
         authenticated_userid,
         )
 
+from deform import (
+        ValidationFailure,
+        )
+
 from ...api.ticket import APITicket
 
 from ..forms.api import (
