@@ -71,7 +71,7 @@ class API(object):
             appstruct = f.validate(controls)
             ticket_maker = APITicket(self.request)
 
-            ticket_maker.new(self.request.user.user.email, self.request)
+            ticket_maker.new(self.request.user.user.email)
 
             return HTTPSeeOther(location=self.request.current_route_url())
         except ValidationFailure as e:
