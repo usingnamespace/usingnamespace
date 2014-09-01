@@ -41,4 +41,7 @@ class Root(object):
         :returns: None
         """
 
-        self.sites = m.DBSession.query(m.Site)
+        if self._request.user.user is None:
+            raise ValueError('No authenticated user...')
+
+        self.sites = m.DBSession.query(m.Site).filter(m.Site.owner_id == self._request.user.user.id)
