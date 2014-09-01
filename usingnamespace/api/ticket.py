@@ -3,23 +3,16 @@ log = logging.getLogger(__name__)
 
 import random
 import string
-import base64
+import hmac
+import hashlib
+
+from os import urandom
+
+from pyramid.compat import bytes_
 
 from sqlalchemy.orm import joinedload
 
 from zope.interface import implementer
-
-from webob.cookies import SignedSerializer
-
-from pyramid.interfaces import (
-    IAuthenticationPolicy,
-    IDebugLogger,
-    )
-
-from pyramid.security import (
-    Authenticated,
-    Everyone,
-    )
 
 from ..models import (
         DBSession,
@@ -27,7 +20,7 @@ from ..models import (
         UserAPITickets,
         )
 
-from .interfaces import ISerializer
+from .interfaces import IDigestMethod
 
 class APITicket(object):
     def __init__(self, request):
@@ -37,55 +30,31 @@ class APITicket(object):
         request = self.request
         user = DBSession.query(User).filter(User.email == principal).options(joinedload('api_tickets')).first()
 
-        serializer = self.request.registry.queryUtility(ISerializer, 'apiticket')
-
         api_tickets = []
         for ticket in user.api_tickets:
-            t = serializer.dumps({
-                'principal': principal,
-                'auth_ticket': ticket.ticket,
-                })
-            t = base64.b64encode(t)
-            t = t.decode('utf-8')
-
-            # Split the result up into multiple strings, that are 32 bytes long each.
-            t = [t[i:i+64] for i in range(0, len(t), 64)]
-
-            api_tickets.append(t)
+            api_tickets.append(ticket.ticket)
 
         return api_tickets
 
-    def new(self, principal, tokens = None):
+    def new(self, principal):
         request = self.request
-        value = {}
-        value['principal'] = principal
-        value['auth_ticket'] = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for x in range(64))
-        value['tokens'] = tokens if tokens is not None else []
+        hexdigest = request.registry.queryUtility(IDigestMethod, 'apiticket')
 
+        if hexdigest is None:
+            raise ValueError('Unable to fetch digest method')
+
+        # Get 32 bytes of random data, and sha512 it
+        ticket = hexdigest(urandom(32)).hexdigest()
         user = DBSession.query(User).filter(User.email == principal).first()
 
         if user is None:
             raise ValueError('Invalid principal provided')
 
-        ticket = value['auth_ticket']
         remote_addr = request.environ['REMOTE_ADDR'] if 'REMOTE_ADDR' in request.environ else None
         user.api_tickets.append(UserAPITickets(ticket=ticket, remote_addr=remote_addr))
 
-    def forget(self):
-        request = self.request
-        debug = self.debug
-        user = request.user
-
-        if user.ticket:
-            debug and self._log('forgetting user: %s, removing ticket: %s' % (user.id, user.ticket.ticket), 'forget', request)
-            DBSession.delete(user.ticket)
-
-
 def includeme(config):
-    serializer = SignedSerializer(
-            config.registry.settings['pyramid.secret.auth'],
-            salt='usingnamespace.api.ticket',
-            hashalg='sha512',
-            )
+    hashalg = 'sha256'
+    digestmethod = lambda string=b'': hashlib.new(hashalg, string)
 
-    config.registry.registerUtility(serializer, ISerializer, 'apiticket')
+    config.registry.registerUtility(digestmethod, IDigestMethod, 'apiticket')
