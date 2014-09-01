@@ -101,25 +101,19 @@ class UserTickets(Base):
 
 class UserAPITickets(Base):
     __table__ = Table('user_api_tickets', Base.metadata,
-            Column('ticket', String(128)),
+            Column('ticket', String(128), primary_key=True, unique=True),
             Column('user_id', Integer, ForeignKey('users.id', onupdate="CASCADE", ondelete="CASCADE")),
             Column('remote_addr', String(45)),
             Column('created', DateTime, default=datetime.datetime.utcnow, nullable=False),
-
-            PrimaryKeyConstraint('ticket', 'user_id'),
-            Index('ix_ticket_api_userid', 'ticket', 'user_id'),
             )
 
     user = relationship("User", lazy="joined", backref='api_tickets')
 
     @classmethod
-    def find_ticket_userid(cls, ticket, userid):
+    def find_ticket(cls, ticket):
         return DBSession.query(cls).join(
                 User,
-                and_(
-                    User.email == userid.lower(),
-                    User.id == cls.user_id
-                    )
+                User.id == cls.user_id
                 ).filter(cls.ticket == ticket).options(
                             contains_eager('user')
                         ).first()
