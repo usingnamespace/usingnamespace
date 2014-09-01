@@ -7,7 +7,7 @@
 <ul>
     % for ticket in tickets:
     <li>
-    <pre>${print_pre(ticket)}</pre>
+    <pre>${ticket}</pre>
     </li>
     % endfor
 </ul>
@@ -21,8 +21,4 @@
 </div>
 
 <%block name="title">API Tickets - ${parent.title()}</%block>
-<%def name="print_pre(lines)">
-% for line in lines:
-${line}
-% endfor
-</%def>
+
