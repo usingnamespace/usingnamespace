@@ -18,6 +18,7 @@ from sqlalchemy import (
         String,
         Table,
         Unicode,
+        text,
         )
 
 from sqlalchemy.orm import (
@@ -29,9 +30,11 @@ from sqlalchemy.ext.hybrid import (
         Comparator,
         )
 
+from sqlalchemy.dialects.postgresql import UUID
+
 class Site(Base):
     __table__ = Table('sites', Base.metadata,
-            Column('id', Integer, primary_key=True, index=True),
+            Column('id', UUID, server_default=text("uuid_generate_v4()"), primary_key=True, index=True),
             Column('title', String(256)),
             Column('tagline', String(256)),
             Column('owner_id', ForeignKey('users.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),

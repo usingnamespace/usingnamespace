@@ -16,6 +16,7 @@ from sqlalchemy import (
         Table,
         Unicode,
         and_,
+        text,
         )
 
 from sqlalchemy.orm import (
@@ -25,12 +26,13 @@ from sqlalchemy.orm import (
         )
 
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.dialects.postgresql import UUID
 
 from cryptacular.bcrypt import BCRYPTPasswordManager
 
 class User(Base):
     __table__ = Table('users', Base.metadata,
-            Column('id', Integer, primary_key=True, unique=True),
+            Column('id', UUID, server_default=text("uuid_generate_v4()"), primary_key=True, unique=True),
             Column('email', String(256), unique=True, index=True),
             Column('name', Unicode(256), index=True),
             Column('credentials', String(60))

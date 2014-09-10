@@ -19,6 +19,7 @@ from sqlalchemy import (
         Table,
         Unicode,
         UniqueConstraint,
+        text,
         )
 
 from sqlalchemy.orm import (
@@ -29,6 +30,8 @@ from sqlalchemy.ext.hybrid import (
         hybrid_property,
         Comparator,
         )
+
+from sqlalchemy.dialects.postgresql import UUID
 
 class IdnaComparator(Comparator):
     def __eq__(self, other):
@@ -43,7 +46,7 @@ class IdnaComparator(Comparator):
 
 class Domain(Base):
     __table__ = Table('domains', Base.metadata,
-            Column('id', Integer, primary_key=True, index=True),
+            Column('id', UUID, server_default=text("uuid_generate_v4()"), primary_key=True, index=True),
             Column('domain', String(256), index=True, unique=True),
             Column('site_id', ForeignKey('sites.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
             )
