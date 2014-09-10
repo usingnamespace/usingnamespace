@@ -115,7 +115,7 @@ class PublishedDateTime(MutableComposite):
 
 class Revision(Base):
     __table__ = Table('revisions', Base.metadata,
-            Column('id', UUID, server_default=text("uuid_generate_v4()"), primary_key=True, index=True),
+            Column('id', UUID(as_uuid=True), server_default=text("uuid_generate_v4()"), primary_key=True, index=True),
             Column('parent', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=True),
             Column('user_id', ForeignKey('users.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
             Column('title', Text, nullable=False),
@@ -136,7 +136,7 @@ class Revision(Base):
 
 class Entry(Base):
     __table__ = Table('entries', Base.metadata,
-            Column('id', UUID, server_default=text("uuid_generate_v4()"), primary_key=True, index=True),
+            Column('id', UUID(as_uuid=True), server_default=text("uuid_generate_v4()"), primary_key=True, index=True),
             Column('current_rev', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
             Column('slug', Unicode(128), index=True),
             Column('created', DateTime, server_default=text('current_timestamp'), index=True),
@@ -221,7 +221,7 @@ class EntryAuthors(Base):
 
 class Tag(Base):
     __table__ = Table('tags', Base.metadata,
-            Column('id', UUID, server_default=text("uuid_generate_v4()"), primary_key=True, index=True),
+            Column('id', UUID(as_uuid=True), server_default=text("uuid_generate_v4()"), primary_key=True, index=True),
             Column('tag', String(50), index=True, unique=True),
             Column('description', Text),
             )

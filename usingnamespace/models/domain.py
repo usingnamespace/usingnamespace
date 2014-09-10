@@ -46,7 +46,7 @@ class IdnaComparator(Comparator):
 
 class Domain(Base):
     __table__ = Table('domains', Base.metadata,
-            Column('id', UUID, server_default=text("uuid_generate_v4()"), primary_key=True, index=True),
+            Column('id', UUID(as_uuid=True), server_default=text("uuid_generate_v4()"), primary_key=True, index=True),
             Column('domain', String(256), index=True, unique=True),
             Column('site_id', ForeignKey('sites.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
             )
