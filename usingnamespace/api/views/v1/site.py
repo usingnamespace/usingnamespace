@@ -12,20 +12,11 @@ from ....views.finalisecontext import FinaliseContext
 class Site(FinaliseContext):
     @view_config()
     def main(self):
-        entries = []
-
-        for entry in self.context.entries.all():
-            entries.append({
-                    'id': str(entry.id),
-                    'title': entry.title,
-                    'year': entry.year,
-                    'month': entry.month,
-                    'day': entry.day,
-                    'time': entry.time,
-                })
+        cur_site = self.context.site
 
         return {
-                'entries': entries,
+                'id': str(cur_site.id),
+                'title': cur_site.title,
+                'tagline': cur_site.tagline,
+                'domains': [{'domain': x.domain, 'default': x.default} for x in cur_site.domains],
                 }
-
-
