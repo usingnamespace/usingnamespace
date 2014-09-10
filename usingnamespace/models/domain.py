@@ -45,7 +45,7 @@ class Domain(Base):
     __table__ = Table('domains', Base.metadata,
             Column('id', Integer, primary_key=True, index=True),
             Column('domain', String(256), index=True, unique=True),
-            Column('site_id', Integer, ForeignKey('sites.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
+            Column('site_id', ForeignKey('sites.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
             )
 
     _domain = __table__.c.domain

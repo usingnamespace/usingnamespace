@@ -77,7 +77,7 @@ class User(Base):
 class UserTickets(Base):
     __table__ = Table('user_tickets', Base.metadata,
             Column('ticket', String(128)),
-            Column('user_id', Integer, ForeignKey('users.id', onupdate="CASCADE", ondelete="CASCADE")),
+            Column('user_id', ForeignKey('users.id', onupdate="CASCADE", ondelete="CASCADE")),
             Column('remote_addr', String(45)),
             Column('created', DateTime, default=datetime.datetime.utcnow, nullable=False),
 
@@ -102,7 +102,7 @@ class UserTickets(Base):
 class UserAPITickets(Base):
     __table__ = Table('user_api_tickets', Base.metadata,
             Column('ticket', String(128), primary_key=True, unique=True),
-            Column('user_id', Integer, ForeignKey('users.id', onupdate="CASCADE", ondelete="CASCADE")),
+            Column('user_id', ForeignKey('users.id', onupdate="CASCADE", ondelete="CASCADE")),
             Column('remote_addr', String(45)),
             Column('created', DateTime, default=datetime.datetime.utcnow, nullable=False),
             )

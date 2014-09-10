@@ -115,8 +115,8 @@ class PublishedDateTime(MutableComposite):
 class Revision(Base):
     __table__ = Table('revisions', Base.metadata,
             Column('id', Integer, primary_key=True, index=True),
-            Column('parent', Integer, ForeignKey('revisions.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=True),
-            Column('user_id', Integer, ForeignKey('users.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
+            Column('parent', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=True),
+            Column('user_id', ForeignKey('users.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
             Column('title', Text, nullable=False),
             Column('entry', Text, nullable=False),
             Column('format', String(25), default="markdown", nullable=False),
@@ -136,7 +136,7 @@ class Revision(Base):
 class Entry(Base):
     __table__ = Table('entries', Base.metadata,
             Column('id', Integer, primary_key=True, index=True),
-            Column('current_rev', Integer, ForeignKey('revisions.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
+            Column('current_rev', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
             Column('slug', Unicode(128), index=True),
             Column('created', DateTime, server_default=text('current_timestamp'), index=True),
             Column('modified', DateTime, server_default=None, server_onupdate=text('current_timestamp'), nullable=True),
@@ -144,7 +144,7 @@ class Entry(Base):
             Column('month', Integer, server_default=None, index=True, nullable=True),
             Column('day', Integer, server_default=None, index=True, nullable=True),
             Column('time', Time, nullable=True),
-            Column('site_id', Integer, ForeignKey('sites.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
+            Column('site_id', ForeignKey('sites.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
 
             UniqueConstraint('year', 'month', 'day', 'slug', 'site_id'),
             Index('idx_year_month_day', 'year', 'month', 'day'),
@@ -196,23 +196,23 @@ class Entry(Base):
 
 class RevisionRendered(Base):
     __table__ = Table('revision_rendered', Base.metadata,
-            Column('revision_id', Integer, ForeignKey('revisions.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key=True),
+            Column('revision_id', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key=True),
             Column('entry', Text, nullable=False),
             )
 
 class EntryRevisions(Base):
     __table__ = Table('entry_revisions', Base.metadata,
-            Column('entry_id', Integer, ForeignKey('entries.id', onupdate="CASCADE", ondelete="CASCADE"), index=True, nullable=False),
-            Column('revision_id', Integer, ForeignKey('revisions.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False),
+            Column('entry_id', ForeignKey('entries.id', onupdate="CASCADE", ondelete="CASCADE"), index=True, nullable=False),
+            Column('revision_id', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False),
 
             PrimaryKeyConstraint('entry_id', 'revision_id'),
             )
 
 class EntryAuthors(Base):
     __table__ = Table('entry_authors', Base.metadata,
-            Column('entry_id', Integer, ForeignKey('entries.id', onupdate="CASCADE", ondelete="CASCADE"), index=True, nullable=False),
-            Column('user_id', Integer, ForeignKey('users.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
-            Column('revision_id', Integer, ForeignKey('revisions.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False),
+            Column('entry_id', ForeignKey('entries.id', onupdate="CASCADE", ondelete="CASCADE"), index=True, nullable=False),
+            Column('user_id', ForeignKey('users.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
+            Column('revision_id', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False),
             Column('primary', Boolean, default=False),
 
             PrimaryKeyConstraint('entry_id', 'user_id'),
