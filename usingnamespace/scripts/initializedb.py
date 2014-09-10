@@ -43,12 +43,12 @@ defaults = {
                 ],
             'entries': [
                 # Title, entry, slug, user, tags, published
-                (u'one', u'Post number 1', 'one', 1, ["c++", "c"], u'test', True),
-                (u'two', u'Post number 2', 'two', 1, ["database", "testing"], u'test', True),
-                (u'three', u'Post number 3', 'three', 1, ["c++", "database"], u'whatever', True),
-                (u'four', u'Post number 4', 'four', 1, ["testing", "c"], u'whatever', True),
-                (u'five', u'Post number 5', 'five', 1, ["c++", "c", "database"], u'test', True),
-                (u'No tags', u'This post has no tags', 'no-tags', 1, [], u'whatever', True),
+                (u'one', u'Post number 1', 'one', u'xistence@0x58.com', ["c++", "c"], u'test', True),
+                (u'two', u'Post number 2', 'two', u'xistence@0x58.com', ["database", "testing"], u'test', True),
+                (u'three', u'Post number 3', 'three', u'xistence@0x58.com', ["c++", "database"], u'whatever', True),
+                (u'four', u'Post number 4', 'four', u'xistence@0x58.com', ["testing", "c"], u'whatever', True),
+                (u'five', u'Post number 5', 'five', u'xistence@0x58.com', ["c++", "c", "database"], u'test', True),
+                (u'No tags', u'This post has no tags', 'no-tags', u'xistence@0x58.com', [], u'whatever', True),
                 ],
         }
 
@@ -125,7 +125,7 @@ def main(argv=sys.argv):
 def insert_new_rev_entry(title, entry, slug, user, tags, site, published=False):
     revision = Revision()
     revision.revision = 0
-    revision.user_id = user
+    revision.author = DBSession.query(User).filter(User.email == user).first()
     revision.title = title
     revision.entry = entry
 
