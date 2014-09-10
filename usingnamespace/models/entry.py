@@ -167,7 +167,10 @@ class Entry(Base):
 
     @property
     def entry(self):
-        return self.current_revision.rendered
+        if self.current_revision.rendered:
+            return self.current_revision.rendered
+        else:
+            return self.current_revision.entry
 
     @property
     def tags(self):
