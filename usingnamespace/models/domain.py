@@ -19,6 +19,7 @@ from sqlalchemy import (
         Table,
         Unicode,
         UniqueConstraint,
+        Index,
         text,
         )
 
@@ -48,8 +49,11 @@ class Domain(Base):
     __table__ = Table('domains', Base.metadata,
             Column('id', UUID(as_uuid=True), server_default=text("uuid_generate_v4()"), primary_key=True, index=True),
             Column('domain', String(256), index=True, unique=True),
+            Column('default', Boolean, default=False),
             Column('site_id', ForeignKey('sites.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
             )
+
+    Index(__table__.c.default, __table__.c.site_id, unique=True, postgresql_where=__table__.c.default==True)
 
     _domain = __table__.c.domain
 
