@@ -17,7 +17,7 @@ class APIV1(FinaliseContext):
         for site in self.context.sites:
             sites.append(
                         {
-                            'id': site.id,
+                            'id': str(site.id),
                             'title': site.title,
                             'tagline': site.tagline,
                         }

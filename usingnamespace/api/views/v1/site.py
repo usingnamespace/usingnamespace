@@ -16,7 +16,7 @@ class Site(FinaliseContext):
 
         for entry in self.context.entries.all():
             entries.append({
-                    'id': entry.id,
+                    'id': str(entry.id),
                     'title': entry.title,
                     'year': entry.year,
                     'month': entry.month,
