@@ -68,5 +68,5 @@ class Site(object):
                 raise ValueError('Site ID ({}) is not valid for current user ({})'.format(self.id, self.__parent__._request.user.user.email))
 
             else:
-                self.entries = first.entries
+                self.site = first
 
