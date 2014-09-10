@@ -5,6 +5,8 @@ from uuid import UUID
 
 from pyramid.compat import string_types
 
+from .entries import Entries
+
 from .... import models as m
 
 class Site(object):
@@ -34,6 +36,9 @@ class Site(object):
         """Check to see if we can traverse this ..."""
 
         next_ctx = None
+
+        if key == 'entries':
+            next_ctx = Entries()
 
         if next_ctx is None:
             raise KeyError
