@@ -1,6 +1,8 @@
 import logging
 log = logging.getLogger(__name__)
 
+from uuid import UUID
+
 from pyramid.compat import string_types
 
 from .... import models as m
@@ -20,18 +22,13 @@ class Site(object):
         :request: The Pyramid request object
         """
         log.debug("Creating new Site: {}".format(site_id))
-
-        if isinstance(site_id, int):
-            self.__name__ = '{}'.format(site_id)
-            self.id = site_id
-
-        if isinstance(site_id, string_types):
-            self.__name__ = site_id
-
-            try:
-                self.id = int(site_id)
-            except ValueError:
-                raise ValueError('Site ID is not an valid integer value')
+    
+        try:
+            self.id = UUID(site_id)
+        except ValueError:
+            raise ValueError('Invalid site ID')
+        
+        self.__name__ = '{}'.format(self.id)
 
     def __getitem__(self, key):
         """Check to see if we can traverse this ..."""
