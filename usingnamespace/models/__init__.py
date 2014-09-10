@@ -9,7 +9,6 @@ from .entry import (
             EntryRevisions,
             Tag,
             RevisionTags,
-            RevisionRendered,
         )
 
 from .user import (

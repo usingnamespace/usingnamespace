@@ -120,6 +120,7 @@ class Revision(Base):
             Column('user_id', ForeignKey('users.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
             Column('title', Text, nullable=False),
             Column('entry', Text, nullable=False),
+            Column('rendered', Text, nullable=True),
             Column('format', String(25), default="markdown", nullable=False),
             Column('changes', Text, nullable=True),
             Column('created', DateTime, server_default=text('current_timestamp')),
@@ -131,7 +132,6 @@ class Revision(Base):
     entry = deferred(__table__.c.entry)
 
     author = relationship("User")
-    entry_rendered = relationship("RevisionRendered")
     tags = relationship("Tag", secondary="revision_tags")
 
 class Entry(Base):
@@ -152,7 +152,7 @@ class Entry(Base):
             Index('idx_year_month', 'year', 'month'),
             )
 
-    current_revision = relationship("Revision", lazy="joined")
+    current_revision = relationship("Revision", lazy="joined", uselist=False)
     all_revisions = relationship("Revision", secondary="entry_revisions")
     authors = relationship("User", secondary="entry_authors")
     site = relationship("Site", backref=backref("entries", lazy="dynamic"))
@@ -166,7 +166,7 @@ class Entry(Base):
 
     @property
     def entry(self):
-        return self.current_revision.entry_rendered
+        return self.current_revision.rendered
 
     @property
     def tags(self):
@@ -194,12 +194,6 @@ class Entry(Base):
                 raise ValueError
         else:
             self._pubdate = value
-
-class RevisionRendered(Base):
-    __table__ = Table('revision_rendered', Base.metadata,
-            Column('revision_id', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key=True),
-            Column('entry', Text, nullable=False),
-            )
 
 class EntryRevisions(Base):
     __table__ = Table('entry_revisions', Base.metadata,
