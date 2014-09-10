@@ -16,7 +16,7 @@
 </article>
 
 <%def name="post_prose(post)">
-  ${post.current_revision.entry}
+  ${post.entry}
 </%def>
 
 <%def name="post_time_full(post)">${post.pubdate.isoformat()}</%def>
