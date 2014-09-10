@@ -138,7 +138,7 @@ class Entry(Base):
     __table__ = Table('entries', Base.metadata,
             Column('id', UUID(as_uuid=True), server_default=text("uuid_generate_v4()"), primary_key=True, index=True),
             Column('current_rev', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
-            Column('slug', Unicode(128), index=True),
+            Column('slug', Unicode(128)),
             Column('created', DateTime, server_default=text('current_timestamp'), index=True),
             Column('modified', DateTime, server_default=None, server_onupdate=text('current_timestamp'), nullable=True),
             Column('year', Integer, server_default=None, index=True, nullable=True),
@@ -147,9 +147,10 @@ class Entry(Base):
             Column('time', Time, nullable=True),
             Column('site_id', ForeignKey('sites.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
 
-            UniqueConstraint('year', 'month', 'day', 'slug', 'site_id'),
-            Index('idx_year_month_day', 'year', 'month', 'day'),
-            Index('idx_year_month', 'year', 'month'),
+            Index('idx_site_year_month_day_slug', 'site_id', 'year', 'month', 'day', 'slug', unique=True),
+            Index('idx_site_year_month_day', 'site_id', 'year', 'month', 'day'),
+            Index('idx_site_year_month', 'site_id', 'year', 'month'),
+            Index('idx_site_year', 'site_id', 'year'),
             )
 
     current_revision = relationship("Revision", lazy="joined", uselist=False)
