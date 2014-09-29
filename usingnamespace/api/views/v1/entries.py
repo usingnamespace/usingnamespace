@@ -22,14 +22,15 @@ class Site(FinaliseContext):
                     'slug': entry.slug,
                     #'created': entry.created, # Convert to string
                     #'modified': entry.modified, # Convert to string
-                    'year': entry.year,
-                    'month': entry.month,
-                    'day': entry.day,
-                    'time': entry.time,
                     'title': entry.title,
-                    'entry': entry.current_revision.entry,
+                    #'entry': entry.current_revision.entry,
                     'tags': [tag.tag for tag in entry.tags],
-                    'published': True if entry.pubdate else False,
+                    'published': {
+                            'year': entry.year,
+                            'month': entry.month,
+                            'day': entry.day,
+                            'time': entry.time,
+                            } if entry.pubdate else {},
                 })
 
         return {'entries': entries}
