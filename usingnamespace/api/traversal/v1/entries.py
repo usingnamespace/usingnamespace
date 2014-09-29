@@ -41,15 +41,10 @@ class Entries(object):
         """
         if self.__parent__ is not None:
             # Finalise the parent first
-            self.__parent__.finalise(last=False)
+            self.__parent__.finalise(last=True)
 
             # Get the entries variable from the parent
             self.site = self.__parent__.site
-            self.site = self.site.first()
-
-            if not self.site:
-                raise ValueError('Unable to get validate site ID')
-
             self.entries = m.DBSession.query(m.Entry).filter(m.Entry.site == self.site)
         else:
             # We need a parent ...
