@@ -73,22 +73,21 @@ class AuthPolicy(object):
 
         self.debug and self._log('Got result from x-api-ticket: %s' % (result,), 'unauthenticated_userid', request)
 
+        class UserInfo(object):
+            def __init__(self):
+                self.id = None
+                self.auth = {}
+                self.user = None
+                self.ticket = None
+
+        userinfo = UserInfo()
+
+        request.state['auth'] = {}
+        request.state['auth']['userinfo'] = userinfo
+
         if result:
-            request.state['auth'] = {}
             request.state['auth']['ticket'] = result
             ticket = self.find_user_ticket(request)
-
-            
-            class UserInfo(object):
-                def __init__(self):
-                    self.id = None
-                    self.auth = {}
-                    self.user = None
-                    self.ticket = None
-
-            userinfo = UserInfo()
-
-            request.state['auth']['userinfo'] = userinfo
 
             if ticket is None:
                 return None

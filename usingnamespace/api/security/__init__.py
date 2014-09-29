@@ -18,7 +18,7 @@ from .authentication import AuthPolicy
 
 def user(request):
     userid = request.authenticated_userid
-    
+
     return request.state['auth']['userinfo']
 
 def includeme(config):
