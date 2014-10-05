@@ -1,5 +1,6 @@
 from .site import Site
 from .entries import Entries
+from .entry import Entry
 
 from .... import models as m
 
