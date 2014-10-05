@@ -7,6 +7,8 @@ from pyramid.compat import string_types
 
 from .... import models as m
 
+from .entry import Entry
+
 class Entries(object):
     """Entries
 
@@ -24,7 +26,10 @@ class Entries(object):
     def __getitem__(self, key):
         """Check to see if we can traverse this ..."""
 
-        next_ctx = None
+        try:
+            next_ctx = Entry(key)
+        except:
+            next_ctx = None
 
         if next_ctx is None:
             raise KeyError
