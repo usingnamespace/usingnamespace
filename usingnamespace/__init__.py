@@ -1,16 +1,16 @@
 import logging
-log = logging.getLogger(__name__)
 
 from pyramid.config import Configurator
 
 from sqlalchemy import engine_from_config
-from sqlalchemy.exc import DBAPIError
 
 from .models import DBSession
 
+log = logging.getLogger(__name__)
+
 required_settings = [
-        'usingnamespace.name',
-        ]
+    'usingnamespace.name',
+]
 
 def main(global_config, **app_settings):
     """ This function returns a Pyramid WSGI application.
@@ -51,12 +51,17 @@ def main(global_config, **app_settings):
 
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_static_view('deform_static', 'deform:static', cache_max_age=3600)
-    config.add_static_view('files', config.registry.settings['usingnamespace.upload_path'], cache_max_age=3600)
+    config.add_static_view(
+        'files',
+        config.registry.settings['usingnamespace.upload_path'],
+        cache_max_age=3600
+    )
 
-    config.add_route('main',
-            '/*traverse',
-            use_global_views=True
-            )
+    config.add_route(
+        'main',
+        '/*traverse',
+        use_global_views=True
+    )
 
     # Scan the views sub-module
     config.scan('.views')
