@@ -2,10 +2,6 @@ import logging
 
 from pyramid.config import Configurator
 
-from sqlalchemy import engine_from_config
-
-from .models import DBSession
-
 log = logging.getLogger(__name__)
 
 required_settings = [
@@ -19,10 +15,6 @@ def main(global_config, **app_settings):
     settings = global_config.copy()
     settings.update(app_settings)
 
-    engine = engine_from_config(settings, 'sqlalchemy.')
-    DBSession.configure(bind=engine)
-    config = Configurator(settings=settings, root_factory='.traversal.MainRoot')
-
     do_start = True
 
     for _req in required_settings:
@@ -34,20 +26,16 @@ def main(global_config, **app_settings):
         log.error('Unable to start due to missing configuration')
         exit(-1)
 
-    # Include the transaction manager
-    config.include('pyramid_tm')
+    settings['tm.manager_hook'] = 'pyramid_tm.explicit_manager'
+    config = Configurator(settings=settings, root_factory='.traversal.MainRoot')
 
-    # We use mako for template rendering
+    config.include('pyramid_retry')
+    config.include('pyramid_services')
     config.include('pyramid_mako')
-
-    # Add in pyramid_mailer for sending out emails
     config.include('pyramid_mailer')
 
-    # Add in the API...
+    config.include('.models.meta')
     config.include('.api')
-
-    # Add in the Management interface...
-    config.include('.management')
 
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_static_view('deform_static', 'deform:static', cache_max_age=3600)
@@ -63,10 +51,7 @@ def main(global_config, **app_settings):
         use_global_views=True
     )
 
-    # Scan the views sub-module
     config.scan('.views')
-
-    # Scan the subscribers for events sub-module
     config.scan('.subscribers')
 
     return config.make_wsgi_app()
