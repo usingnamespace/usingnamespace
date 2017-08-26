@@ -1,0 +1,9 @@
+TODO:
+
+- Move remote_addr from user_tickets and user_api_tickets into a seperate table
+  so that one can see a list of what remote endpoints have used a particular
+  ticket. This will allow user for example to know if their API token has been
+  stolen, or if their session is being used from a location they aren't
+  expecting.
+
+- 
