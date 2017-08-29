@@ -24,8 +24,6 @@ from sqlalchemy.orm import (
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects.postgresql import UUID
 
-from cryptacular.bcrypt import BCRYPTPasswordManager
-
 class User(Base):
     __table__ = Table(
         'users', Base.metadata,
@@ -38,16 +36,6 @@ class User(Base):
     )
 
     _email = __table__.c.email
-    _credentials = __table__.c.credentials
-
-    @hybrid_property
-    def credentials(self):
-        return self._credentials
-
-    @credentials.setter
-    def credentials(self, value):
-        manager = BCRYPTPasswordManager()
-        self._credentials = manager.encode(value, rounds=14)
 
     @hybrid_property
     def email(self):
@@ -57,23 +45,6 @@ class User(Base):
     def email(self, value):
         self._email = value.lower().strip()
 
-    @property
-    def username(self):
-        """Backwards compat..."""
-        return self.email
-
-    def check_password(self, password):
-        manager = BCRYPTPasswordManager()
-        return manager.check(self.credentials, password)
-
-    @classmethod
-    def validate_user_password(cls, email, password):
-        user = DBSession.query(cls).filter(cls.email == email.lower()).first()
-
-        if user is not None:
-            if user.check_password(password):
-                return user
-        return None
 
 class UserTickets(Base):
     __table__ = Table(
@@ -89,17 +60,6 @@ class UserTickets(Base):
 
     user = relationship("User", lazy="joined", backref='tickets')
 
-    @classmethod
-    def find_ticket_userid(cls, ticket, userid):
-        return DBSession.query(cls).join(
-                User,
-                and_(
-                    User.email == userid.lower(),
-                    User.id == cls.user_id
-                    )
-                ).filter(cls.ticket == ticket).options(
-                            contains_eager('user')
-                        ).first()
 
 class UserAPITickets(Base):
     __table__ = Table(
@@ -111,13 +71,3 @@ class UserAPITickets(Base):
     )
 
     user = relationship("User", lazy="joined", backref='api_tickets')
-
-    @classmethod
-    def find_ticket(cls, ticket):
-        return DBSession.query(cls).join(
-                User,
-                User.id == cls.user_id
-                ).filter(cls.ticket == ticket).options(
-                            contains_eager('user')
-                        ).first()
-
