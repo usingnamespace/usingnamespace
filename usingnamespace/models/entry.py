@@ -81,7 +81,7 @@ class PublishedDateTime(MutableComposite):
             self.day = day
             self.time = time
         else:
-            self.year = self.month = self.day = None
+            self.year = self.month = self.day = self.time = None
 
     def getdatetime(self):
         return datetime.datetime.combine(
