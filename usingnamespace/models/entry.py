@@ -196,6 +196,13 @@ class Entry(Base):
 
     @pubdate.setter
     def pubdate_set(self, value):
+        if value is None:
+            self._pubdate = PublishedDateTime(
+                None, None,
+                None, None
+            )
+            return self._pubdate
+
         if not isinstance(value, PublishedDateTime):
             if isinstance(value, datetime.datetime):
                 self._pubdate = PublishedDateTime(
@@ -206,6 +213,9 @@ class Entry(Base):
                 raise ValueError
         else:
             self._pubdate = value
+
+        return self._pubdate
+
 
 class EntryRevisions(Base):
     __table__ = Table(
