@@ -100,7 +100,7 @@ class PublishedDateTime(MutableComposite):
         return self.year, self.month, self.day, self.time
 
     def __repr__(self):
-        return u'<PublishedDateTime: year: %d month: %d day: %d time: %d>' % (self.year, self.month, self.day, self.time.strftime("%H:%M") if self.strftime is not None else None)
+        return u'<PublishedDateTime: year: %d month: %d day: %d time: %d>' % (self.year, self.month, self.day, self.time.strftime("%H:%M") if self.time is not None else None)
 
     def __eq__(self, other):
         return (
