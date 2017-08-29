@@ -116,19 +116,20 @@ class PublishedDateTime(MutableComposite):
 
 
 class Revision(Base):
-    __table__ = Table('revisions', Base.metadata,
-            Column('id', UUID(as_uuid=True), server_default=text("uuid_generate_v4()"), primary_key=True, index=True),
-            Column('parent', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=True),
-            Column('user_id', ForeignKey('users.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
-            Column('title', Text, nullable=False),
-            Column('entry', Text, nullable=False),
-            Column('rendered', Text, nullable=True),
-            Column('format', String(25), default="markdown", nullable=False),
-            Column('changes', Text, nullable=True),
-            Column('created', DateTime, server_default=text('current_timestamp')),
-            Column('modified', DateTime, server_default=None, server_onupdate=text('current_timestamp'), nullable=True),
-            Column('pubdate', DateTime, nullable=True),
-            )
+    __table__ = Table(
+        'revisions', Base.metadata,
+        Column('id', UUID(as_uuid=True), server_default=text("gen_random_uuid()"), primary_key=True, index=True),
+        Column('parent', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=True),
+        Column('user_id', ForeignKey('users.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
+        Column('title', Text, nullable=False),
+        Column('entry', Text, nullable=False),
+        Column('rendered', Text, nullable=True),
+        Column('format', String(25), default="markdown", nullable=False),
+        Column('changes', Text, nullable=True),
+        Column('created', DateTime, server_default=text('current_timestamp')),
+        Column('modified', DateTime, server_default=None, server_onupdate=text('current_timestamp'), nullable=True),
+        Column('pubdate', DateTime, nullable=True),
+    )
 
     # Defer loading from this, we don't need it most of the time.
     entry = deferred(__table__.c.entry)
@@ -138,23 +139,24 @@ class Revision(Base):
 
 
 class Entry(Base):
-    __table__ = Table('entries', Base.metadata,
-            Column('id', UUID(as_uuid=True), server_default=text("uuid_generate_v4()"), primary_key=True, index=True),
-            Column('current_rev', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
-            Column('slug', Unicode(128)),
-            Column('created', DateTime, server_default=text('current_timestamp'), index=True),
-            Column('modified', DateTime, server_default=None, server_onupdate=text('current_timestamp'), nullable=True),
-            Column('year', Integer, server_default=None, index=True, nullable=True),
-            Column('month', Integer, server_default=None, index=True, nullable=True),
-            Column('day', Integer, server_default=None, index=True, nullable=True),
-            Column('time', Time, nullable=True),
-            Column('site_id', ForeignKey('sites.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
+    __table__ = Table(
+        'entries', Base.metadata,
+        Column('id', UUID(as_uuid=True), server_default=text("gen_random_uuid()"), primary_key=True, index=True),
+        Column('current_rev', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
+        Column('slug', Unicode(128)),
+        Column('created', DateTime, server_default=text('current_timestamp'), index=True),
+        Column('modified', DateTime, server_default=None, server_onupdate=text('current_timestamp'), nullable=True),
+        Column('year', Integer, server_default=None, index=True, nullable=True),
+        Column('month', Integer, server_default=None, index=True, nullable=True),
+        Column('day', Integer, server_default=None, index=True, nullable=True),
+        Column('time', Time, nullable=True),
+        Column('site_id', ForeignKey('sites.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
 
-            Index('idx_site_year_month_day_slug', 'site_id', 'year', 'month', 'day', 'slug', unique=True),
-            Index('idx_site_year_month_day', 'site_id', 'year', 'month', 'day'),
-            Index('idx_site_year_month', 'site_id', 'year', 'month'),
-            Index('idx_site_year', 'site_id', 'year'),
-            )
+        Index('idx_site_year_month_day_slug', 'site_id', 'year', 'month', 'day', 'slug', unique=True),
+        Index('idx_site_year_month_day', 'site_id', 'year', 'month', 'day'),
+        Index('idx_site_year_month', 'site_id', 'year', 'month'),
+        Index('idx_site_year', 'site_id', 'year'),
+    )
 
     current_revision = relationship("Revision", lazy="joined", uselist=False)
     all_revisions = relationship("Revision", secondary="entry_revisions")
@@ -206,22 +208,25 @@ class Entry(Base):
             self._pubdate = value
 
 class EntryRevisions(Base):
-    __table__ = Table('entry_revisions', Base.metadata,
-            Column('entry_id', ForeignKey('entries.id', onupdate="CASCADE", ondelete="CASCADE"), index=True, nullable=False),
-            Column('revision_id', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False),
+    __table__ = Table(
+        'entry_revisions', Base.metadata,
+        Column('entry_id', ForeignKey('entries.id', onupdate="CASCADE", ondelete="CASCADE"), index=True, nullable=False),
+        Column('revision_id', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False),
 
-            PrimaryKeyConstraint('entry_id', 'revision_id'),
-            )
+        PrimaryKeyConstraint('entry_id', 'revision_id'),
+    )
+
 
 class EntryAuthors(Base):
-    __table__ = Table('entry_authors', Base.metadata,
-            Column('entry_id', ForeignKey('entries.id', onupdate="CASCADE", ondelete="CASCADE"), index=True, nullable=False),
-            Column('user_id', ForeignKey('users.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
-            Column('revision_id', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False),
-            Column('primary', Boolean, default=False),
+    __table__ = Table(
+        'entry_authors', Base.metadata,
+        Column('entry_id', ForeignKey('entries.id', onupdate="CASCADE", ondelete="CASCADE"), index=True, nullable=False),
+        Column('user_id', ForeignKey('users.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False),
+        Column('revision_id', ForeignKey('revisions.id', onupdate="CASCADE", ondelete="CASCADE"), nullable=False),
+        Column('primary', Boolean, default=False),
 
-            PrimaryKeyConstraint('entry_id', 'user_id'),
-            )
+        PrimaryKeyConstraint('entry_id', 'user_id'),
+    )
 
 class Tag(Base):
     __table__ = Table('tags', Base.metadata,

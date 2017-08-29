@@ -27,12 +27,15 @@ from sqlalchemy.dialects.postgresql import UUID
 from cryptacular.bcrypt import BCRYPTPasswordManager
 
 class User(Base):
-    __table__ = Table('users', Base.metadata,
-            Column('id', UUID(as_uuid=True), server_default=text("uuid_generate_v4()"), primary_key=True, unique=True),
-            Column('email', String(256), unique=True, index=True),
-            Column('name', Unicode(256), index=True),
-            Column('credentials', String(60))
-            )
+    __table__ = Table(
+        'users', Base.metadata,
+        Column('id', UUID(as_uuid=True), server_default=text("gen_random_uuid()"), primary_key=True, unique=True),
+        Column('email', String(256), unique=True, index=True),
+        Column('name', Unicode(256), index=True),
+        Column('credentials', String(60)),
+        Column('disabled', Boolean()),
+        Column('deleted', Boolean()),
+    )
 
     _email = __table__.c.email
     _credentials = __table__.c.credentials
@@ -73,15 +76,16 @@ class User(Base):
         return None
 
 class UserTickets(Base):
-    __table__ = Table('user_tickets', Base.metadata,
-            Column('ticket', String(128)),
-            Column('user_id', ForeignKey('users.id', onupdate="CASCADE", ondelete="CASCADE")),
-            Column('remote_addr', String(45)),
-            Column('created', DateTime, default=datetime.datetime.utcnow, nullable=False),
+    __table__ = Table(
+        'user_tickets', Base.metadata,
+        Column('ticket', String(128)),
+        Column('user_id', ForeignKey('users.id', onupdate="CASCADE", ondelete="CASCADE")),
+        Column('remote_addr', String(45)),
+        Column('created', DateTime, default=datetime.datetime.utcnow, nullable=False),
 
-            PrimaryKeyConstraint('ticket', 'user_id'),
-            Index('ix_ticket_userid', 'ticket', 'user_id'),
-            )
+        PrimaryKeyConstraint('ticket', 'user_id'),
+        Index('ix_ticket_userid', 'ticket', 'user_id'),
+    )
 
     user = relationship("User", lazy="joined", backref='tickets')
 
@@ -98,12 +102,13 @@ class UserTickets(Base):
                         ).first()
 
 class UserAPITickets(Base):
-    __table__ = Table('user_api_tickets', Base.metadata,
-            Column('ticket', String(128), primary_key=True, unique=True),
-            Column('user_id', ForeignKey('users.id', onupdate="CASCADE", ondelete="CASCADE")),
-            Column('remote_addr', String(45)),
-            Column('created', DateTime, default=datetime.datetime.utcnow, nullable=False),
-            )
+    __table__ = Table(
+        'user_api_tickets', Base.metadata,
+        Column('ticket', String(128), primary_key=True, unique=True),
+        Column('user_id', ForeignKey('users.id', onupdate="CASCADE", ondelete="CASCADE")),
+        Column('remote_addr', String(45)),
+        Column('created', DateTime, default=datetime.datetime.utcnow, nullable=False),
+    )
 
     user = relationship("User", lazy="joined", backref='api_tickets')
 
