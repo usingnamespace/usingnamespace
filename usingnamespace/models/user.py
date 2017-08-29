@@ -1,29 +1,25 @@
 import datetime
 
 from .meta import (
-        Base,
-        DBSession,
-        )
+    Base,
+)
 
 from sqlalchemy import (
-        Column,
-        DateTime,
-        ForeignKey,
-        Index,
-        Integer,
-        PrimaryKeyConstraint,
-        String,
-        Table,
-        Unicode,
-        and_,
-        text,
-        )
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    PrimaryKeyConstraint,
+    String,
+    Table,
+    Unicode,
+    text,
+)
 
 from sqlalchemy.orm import (
-        contains_eager,
-        noload,
-        relationship,
-        )
+    relationship,
+)
 
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.dialects.postgresql import UUID

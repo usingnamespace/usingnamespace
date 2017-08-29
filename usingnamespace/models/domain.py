@@ -3,34 +3,30 @@
 # Created: 2013-09-02
 
 from pyramid.compat import (
-        text_type,
-        binary_type
-        )
+    text_type,
+    binary_type
+)
 
 from .meta import Base
 
 from sqlalchemy import (
-        Boolean,
-        Column,
-        ForeignKey,
-        Integer,
-        PrimaryKeyConstraint,
-        String,
-        Table,
-        Unicode,
-        UniqueConstraint,
-        Index,
-        text,
-        )
+    Boolean,
+    Column,
+    ForeignKey,
+    String,
+    Table,
+    Index,
+    text,
+)
 
 from sqlalchemy.orm import (
-        relationship,
-        )
+    relationship,
+)
 
 from sqlalchemy.ext.hybrid import (
-        hybrid_property,
-        Comparator,
-        )
+    hybrid_property,
+    Comparator,
+)
 
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -46,14 +42,19 @@ class IdnaComparator(Comparator):
         return self.__clause_element__() == other
 
 class Domain(Base):
-    __table__ = Table('domains', Base.metadata,
-            Column('id', UUID(as_uuid=True), server_default=text("uuid_generate_v4()"), primary_key=True, index=True),
-            Column('domain', String(256), index=True, unique=True),
-            Column('default', Boolean, default=False),
-            Column('site_id', ForeignKey('sites.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
-            )
+    __table__ = Table(
+        'domains', Base.metadata,
+        Column('id', UUID(as_uuid=True), server_default=text("gen_random_uuid()"), primary_key=True, index=True),
+        Column('domain', String(256), index=True, unique=True),
+        Column('default', Boolean, default=False),
+        Column('site_id', ForeignKey('sites.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
+    )
 
-    Index(__table__.c.default, __table__.c.site_id, unique=True, postgresql_where=__table__.c.default==True)
+    Index(
+        __table__.c.default, __table__.c.site_id,
+        unique=True,
+        postgresql_where=__table__.c.default==True # noqa: sqla requirement
+    )
 
     _domain = __table__.c.domain
 
@@ -77,4 +78,3 @@ class Domain(Base):
         return IdnaComparator(cls._domain)
 
     site = relationship("Site", backref="domains", lazy="joined")
-

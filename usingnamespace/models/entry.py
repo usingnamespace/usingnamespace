@@ -1,46 +1,38 @@
-# File: Post.py
-# Author: Bert JW Regeer <bertjw@regeer.org>
-# Created: 2012-09-25
-
 import datetime
 
 from .meta import Base
 
 from sqlalchemy import (
-        Boolean,
-        Column,
-        DateTime,
-        ForeignKey,
-        ForeignKeyConstraint,
-        Index,
-        Integer,
-        PrimaryKeyConstraint,
-        Sequence,
-        String,
-        Table,
-        Text,
-        Time,
-        Unicode,
-        UniqueConstraint,
-        extract,
-        sql,
-        text,
-        )
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    PrimaryKeyConstraint,
+    String,
+    Table,
+    Text,
+    Time,
+    Unicode,
+    sql,
+    text,
+)
 
 from sqlalchemy.orm.properties import CompositeProperty
 
 from sqlalchemy.orm import (
-        composite,
-        deferred,
-        relationship,
-        backref,
-        )
+    composite,
+    deferred,
+    relationship,
+    backref,
+)
 
 from sqlalchemy.ext.hybrid import (
-        hybrid_property,
-        )
+    hybrid_property,
+)
 
-from sqlalchemy.ext.mutable import Mutable, MutableComposite
+from sqlalchemy.ext.mutable import MutableComposite
 from sqlalchemy.dialects.postgresql import UUID
 
 class PublishedDateTimeComparator(CompositeProperty.Comparator):
@@ -56,6 +48,7 @@ class PublishedDateTimeComparator(CompositeProperty.Comparator):
         return sql.and_(*[a == b for a, b in
                           zip(self.__clause_element__().clauses,
                               other.__composite_values__())])
+
     def __ne__(self, other):
         """redefine the not equals operator"""
 
@@ -72,11 +65,14 @@ class PublishedDateTimeComparator(CompositeProperty.Comparator):
     def asc(self):
         return ', '.join(map(str, (map(sql.asc, map(str, self.__clause_element__().clauses)))))
 
+
 class PublishedDateTime(MutableComposite):
     def __init__(self, year, month, day, time):
         if year is not None and month is not None and day is not None:
             try:
-                valid = datetime.date(year, month, day)
+                datetime.date(year, month, day)
+                if time is not None:
+                    datetime.time(time)
             except:
                 raise
 
@@ -88,7 +84,10 @@ class PublishedDateTime(MutableComposite):
             self.year = self.month = self.day = None
 
     def getdatetime(self):
-        return datetime.datetime.combine(datetime.date(self.year, self.month, self.day), self.time)
+        return datetime.datetime.combine(
+            datetime.date(self.year, self.month, self.day),
+            self.time
+        )
 
     def __setattr__(self, key, value):
         # Set the attributes
@@ -104,14 +103,17 @@ class PublishedDateTime(MutableComposite):
         return u'<PublishedDateTime: year: %d month: %d day: %d time: %d>' % (self.year, self.month, self.day, self.time.strftime("%H:%M") if self.strftime is not None else None)
 
     def __eq__(self, other):
-        return isinstance(other, PublishedDateTime) and \
-                other.year == self.year and \
-                other.month == self.month and \
-                other.day == self.day and \
-                other.time == self.time
+        return (
+            isinstance(other, PublishedDateTime) and
+            other.year == self.year and
+            other.month == self.month and
+            other.day == self.day and
+            other.time == self.time
+        )
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
 
 class Revision(Base):
     __table__ = Table('revisions', Base.metadata,
@@ -133,6 +135,7 @@ class Revision(Base):
 
     author = relationship("User")
     tags = relationship("Tag", secondary="revision_tags")
+
 
 class Entry(Base):
     __table__ = Table('entries', Base.metadata,
@@ -159,7 +162,10 @@ class Entry(Base):
     site = relationship("Site", backref=backref("entries", lazy="dynamic"))
 
     _time = __table__.c.time
-    _pubdate = composite(PublishedDateTime, 'year', 'month', 'day', '_time', comparator_factory=PublishedDateTimeComparator)
+    _pubdate = composite(
+        PublishedDateTime, 'year', 'month',
+        'day', '_time', comparator_factory=PublishedDateTimeComparator
+    )
 
     @property
     def title(self):
@@ -190,7 +196,10 @@ class Entry(Base):
     def pubdate_set(self, value):
         if not isinstance(value, PublishedDateTime):
             if isinstance(value, datetime.datetime):
-                self._pubdate = PublishedDateTime(value.year, value.month, value.day, value.timetz())
+                self._pubdate = PublishedDateTime(
+                    value.year, value.month,
+                    value.day, value.timetz()
+                )
             else:
                 raise ValueError
         else:
