@@ -10,6 +10,7 @@ requires = [
     'cryptacular',
     'misaka',
     'psycopg2',
+    'pygments'
     'pyramid',
     'pyramid_authsanity',
     'pyramid_mailer',
@@ -57,7 +58,7 @@ setup(
     extras_require={
         'develop': develop_requires,
         'testing': testing_requires,
-        },
+    },
     entry_points={
         "paste.app_factory": [
             'main = usingnamespace:main',
