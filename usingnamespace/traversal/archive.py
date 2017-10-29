@@ -67,31 +67,15 @@ class ArchiveYear(object):
             next_ctx._request = self._request
             return next_ctx
 
-    def finalise(self, last=True):
-        """Attempts to find out if the year is valid
-
-        :last: If this is the last context in the tree.
-        :returns: None
-
-        """
+    @property
+    def entries(self):
         if self.__parent__ is not None:
-            # Finalise the parent first
-            self.__parent__.finalise(last=False)
-
             # Get the entries variable from the parent
-            self.entries = self.__parent__.entries
-            self.entries = self.entries.filter(m.Entry.year == self.year)
+            entries = self.__parent__.entries
+            return entries.filter(m.Entry.year == self.year)
         else:
-            # We need a parent ...
             raise ValueError
 
-        if last:
-            # Attempt to get a single entry, if we get nothing back we return
-            # ValueError
-            first = self.entries.first()
-
-            if first is None:
-                raise ValueError
 
 @implementer(IArchive)
 class ArchiveYearMonth(object):
@@ -148,31 +132,15 @@ class ArchiveYearMonth(object):
             next_ctx._request = self._request
             return next_ctx
 
-    def finalise(self, last=True):
-        """Attempts to find out if the month is valid
-
-        :last: If this is the last context in the tree.
-        :returns: None
-
-        """
+    @property
+    def entries(self):
         if self.__parent__ is not None:
-            # Finalise the parent first
-            self.__parent__.finalise(last=False)
-
             # Get the entries variable from the parent
-            self.entries = self.__parent__.entries
-            self.entries = self.entries.filter(m.Entry.month == self.month)
+            entries = self.__parent__.entries
+            return entries.filter(m.Entry.month == self.month)
         else:
-            # We need a parent ...
             raise ValueError
 
-        if last:
-            # Attempt to get a single entry, if we get nothing back we return
-            # ValueError
-            first = self.entries.first()
-
-            if first is None:
-                raise ValueError
 
 @implementer(IArchive)
 class ArchiveYearMonthDay(object):
@@ -190,7 +158,7 @@ class ArchiveYearMonthDay(object):
         log.debug("Creating new ArchiveYearMonthDay: {}".format(day))
 
         if isinstance(day, int):
-            self.__name__ = '{}'.format(month)
+            self.__name__ = '{}'.format(day)
             self.day = day
 
         if isinstance(day, string_types):
@@ -229,28 +197,11 @@ class ArchiveYearMonthDay(object):
             next_ctx._request = self._request
             return next_ctx
 
-    def finalise(self, last=True):
-        """Attempts to find out if the month is valid
-
-        :last: If this is the last context in the tree.
-        :returns: None
-
-        """
+    @property
+    def entries(self):
         if self.__parent__ is not None:
-            # Finalise the parent first
-            self.__parent__.finalise(last=False)
-
             # Get the entries variable from the parent
-            self.entries = self.__parent__.entries
-            self.entries = self.entries.filter(m.Entry.day == self.day)
+            entries = self.__parent__.entries
+            return entries.filter(m.Entry.day == self.day)
         else:
-            # We need a parent ...
             raise ValueError
-
-        if last:
-            # Attempt to get a single entry, if we get nothing back we return
-            # ValueError
-            first = self.entries.first()
-
-            if first is None:
-                raise ValueError

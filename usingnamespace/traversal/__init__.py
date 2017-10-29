@@ -65,23 +65,20 @@ class MainRoot(object):
             next_ctx._request = self._request
             return next_ctx
 
-    def finalise(self, **kw):
-        """Attempts to find out if the domain being used is valid.
+    @property
+    def curdomain(self):
+        return (
+            self._request.dbsession.query(m.Domain).
+            filter(m.Domain.domain == self._request.domain).
+            first()
+        )
 
-        If the domain being used is not a valid domain, we raise ValueError, if
-        it is valid we set up self.entries to filter any possible entries
-        against the current domains ID.
-
-        :returns: None
-        """
-
-        self.curdomain = m.DBSession.query(m.Domain) \
-                .filter(m.Domain.domain == self._request.domain) \
-                .first()
-
+    @property
+    def entries(self):
         if self.curdomain is not None:
-            self.entries = m.DBSession.query(m.Entry) \
-                    .filter(m.Entry.site == self.curdomain.site)
-            return None
+            return (
+                self._request.dbsession.query(m.Entry).
+                filter(m.Entry.site == self.curdomain.site)
+            )
         else:
             raise ValueError
