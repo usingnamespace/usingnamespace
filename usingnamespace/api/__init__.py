@@ -6,8 +6,8 @@ from pyramid.wsgi import wsgiapp2
 log = logging.getLogger(__name__)
 
 required_settings = [
-        'pyramid.secret.auth',
-        ]
+    'usingnamespace.secret.auth',
+]
 
 default_settings = (
     ('route_path', str, '/api'),
