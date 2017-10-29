@@ -1,12 +1,13 @@
 import logging
-log = logging.getLogger(__name__)
 
 from pyramid.view import (
-            view_config,
-            notfound_view_config,
-        )
+    view_config,
+    notfound_view_config,
+)
 
 from sqlalchemy.exc import DBAPIError
+
+log = logging.getLogger(__name__)
 
 @view_config(context=DBAPIError, renderer='templates/db_failed.mako')
 def db_failed(context, request):
@@ -21,4 +22,3 @@ def not_found(context, request):
         log.exception(context)
     request.response.status_int = 404
     return {}
-

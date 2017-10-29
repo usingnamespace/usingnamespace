@@ -1,5 +1,4 @@
 import logging
-log = logging.getLogger(__name__)
 
 from zope.interface import Interface
 from zope.interface import implementer
@@ -10,8 +9,11 @@ from .entry import Entry
 
 from .. import models as m
 
+log = logging.getLogger(__name__)
+
 class IArchive(Interface):
     """Marker interface for archive contexts"""
+
 
 @implementer(IArchive)
 class ArchiveYear(object):

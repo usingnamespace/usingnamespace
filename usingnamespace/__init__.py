@@ -34,6 +34,7 @@ def includeme(config):
     config.scan('.views')
     config.scan('.subscribers')
 
+
 def main(global_config, **app_settings):
     """ This function returns a Pyramid WSGI application.
     """

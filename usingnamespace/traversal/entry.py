@@ -1,7 +1,8 @@
 import logging
-log = logging.getLogger(__name__)
 
 from .. import models as m
+
+log = logging.getLogger(__name__)
 
 class Entry(object):
     """The leaf node for an entry"""

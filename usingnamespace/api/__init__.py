@@ -1,9 +1,9 @@
 import logging
-log = logging.getLogger(__name__)
 
 from pyramid.config import Configurator
 from pyramid.wsgi import wsgiapp2
-from pyramid.settings import asbool
+
+log = logging.getLogger(__name__)
 
 required_settings = [
         'pyramid.secret.auth',
@@ -32,7 +32,7 @@ def includeme(config):
 
     # Update the config
     config.registry.settings.update(settings)
-    
+
     # Create the application
     application = make_sub_application(config.registry.settings, config.registry)
 

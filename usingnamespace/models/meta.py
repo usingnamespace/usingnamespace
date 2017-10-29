@@ -46,4 +46,3 @@ def get_dbmaker(engine):
     dbmaker = sessionmaker()
     dbmaker.configure(bind=engine)
     return dbmaker
-

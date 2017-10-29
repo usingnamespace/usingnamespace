@@ -1,17 +1,18 @@
 import logging
-log = logging.getLogger(__name__)
 
-from .archive import (
-            ArchiveYear,
-            ArchiveYearMonth,
-            ArchiveYearMonthDay,
-        )
+from .archive import (  # noqa
+    ArchiveYear,
+    ArchiveYearMonth,
+    ArchiveYearMonthDay,
+)
 
-from .entry import (
-        Entry
-        )
+from .entry import (  # noqa
+    Entry
+)
 
 from .. import models as m
+
+log = logging.getLogger(__name__)
 
 class MainRoot(object):
     """The usingnamespace root factory
@@ -84,5 +85,3 @@ class MainRoot(object):
             return None
         else:
             raise ValueError
-
-
