@@ -77,8 +77,10 @@ def make_application(config):
         log.error('Unable to start due to missing configuration')
         exit(-1)
 
-    # Include the transaction manager
-    config.include('pyramid_tm')
+    config.include('pyramid_retry')
+    config.include('pyramid_services')
+    config.include('pyramid_mailer')
+    config.include('..models.meta')
 
     def is_api(request):
         if (
