@@ -17,7 +17,6 @@ def includeme(config):
     config.include('pyramid_mailer')
 
     config.include('.models.meta')
-    config.include('.api')
 
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_static_view(
@@ -56,4 +55,8 @@ def main(global_config, **app_settings):
     settings['tm.manager_hook'] = 'pyramid_tm.explicit_manager'
     config = Configurator(settings=settings, root_factory='.traversal.MainRoot')
     config.include('.')
+
+    if asbool(settings['usingnamespace.api.sub']) is True:
+        config.include('.api')
+
     return config.make_wsgi_app()
