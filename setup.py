@@ -10,7 +10,7 @@ requires = [
     'cryptacular',
     'misaka',
     'psycopg2',
-    'pygments'
+    'pygments',
     'pyramid',
     'pyramid_authsanity',
     'pyramid_mailer',
