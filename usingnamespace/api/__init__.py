@@ -42,10 +42,15 @@ def includeme(config):
     if config.registry.settings['usingnamespace.api.domain'] != '':
         route_kw['is_api_domain'] = config.registry.settings['usingnamespace.api.domain']
 
-    config.add_route_predicate('is_api_domain', config.maybe_dotted('.predicates.route.API'))
-    config.add_route('usingnamespace.api',
-            config.registry.settings['usingnamespace.api.route_path'] + '/*subpath',
-            **route_kw)
+        config.add_route_predicate(
+            'is_api_domain',
+            config.maybe_dotted('.predicates.route.API')
+        )
+
+    config.add_route(
+        'usingnamespace.api',
+        config.registry.settings['usingnamespace.api.route_path'] + '/*subpath',
+        **route_kw)
 
     # Add the API view
     config.add_view(wsgiapp2(application), route_name='usingnamespace.api')
@@ -76,32 +81,46 @@ def make_application(config):
     config.include('pyramid_tm')
 
     def is_api(request):
-        if request.matched_route is not None and request.matched_route.name == 'usingnamespace.api.main':
+        if (
+            request.matched_route is not None and
+            request.matched_route.name == 'usingnamespace.api.main'
+        ):
             return True
         return False
 
     config.add_request_method(callable=is_api, name='is_api', reify=True)
-    config.add_subscriber_predicate('is_api', config.maybe_dotted('.predicates.subscriber.IsAPI'))
+    config.add_subscriber_predicate(
+        'is_api',
+        config.maybe_dotted('.predicates.subscriber.IsAPI')
+    )
 
-    config.add_route('api',
-            '/*traverse',
-            factory='.traversal.Root',
-            use_global_views=False,
-            )
+    config.add_route(
+        'api',
+        '/*traverse',
+        factory='.traversal.Root',
+        use_global_views=False,
+    )
 
     config.scan('.views')
 
 def main(global_config, **app_settings):
-    from sqlalchemy import engine_from_config
-    from sqlalchemy.exc import DBAPIError
-
-    from ..models import DBSession
-
+    """ This function returns a Pyramid WSGI application.
+    """
     settings = global_config.copy()
     settings.update(app_settings)
 
-    engine = engine_from_config(settings, 'sqlalchemy.')
-    DBSession.configure(bind=engine)
+    do_start = True
+
+    for _req in required_settings:
+        if _req not in settings:
+            log.error('{} is not set in configuration file.'.format(_req))
+            do_start = False
+
+    if do_start is False:
+        log.error('Unable to start due to missing configuration')
+        exit(-1)
+
+    settings['tm.manager_hook'] = 'pyramid_tm.explicit_manager'
     config = Configurator(settings=settings)
 
     # Go parse the settings
