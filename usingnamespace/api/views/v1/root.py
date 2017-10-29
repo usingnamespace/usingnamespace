@@ -3,14 +3,12 @@ from pyramid.view import (
         view_defaults,
         )
 
-from ....views.finalisecontext import FinaliseContext
-
 @view_defaults(context='...traversal.v1.Root',
         route_name='api',
         effective_principals='system.Authenticated',
         renderer='json',
         )
-class APIV1(FinaliseContext):
+class APIV1:
     @view_config()
     def main(self):
         sites = []
