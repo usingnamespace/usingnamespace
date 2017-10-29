@@ -89,8 +89,6 @@ def make_application(config):
             use_global_views=False,
             )
 
-    config.include('.ticket')
-    config.include('.security')
     config.scan('.views')
 
 def main(global_config, **app_settings):
