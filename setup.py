@@ -12,7 +12,7 @@ requires = [
     'psycopg2',
     'pygments',
     'pyramid',
-    'pyramid_authsanity',
+    'pyramid_authsanity~=1.1.0,<2.0.0',
     'pyramid_mailer',
     'pyramid_mako',
     'pyramid_services',
