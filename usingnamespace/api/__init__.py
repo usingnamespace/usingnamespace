@@ -2,6 +2,10 @@ import logging
 
 from pyramid.config import Configurator
 from pyramid.wsgi import wsgiapp2
+from pyramid.authorization import ACLAuthorizationPolicy
+
+from pyramid_authsanity.sources import HeaderAuthSourceInitializer
+from pyramid_authsanity.interfaces import IAuthSourceService
 
 log = logging.getLogger(__name__)
 
@@ -80,6 +84,17 @@ def make_application(config):
     config.include('pyramid_retry')
     config.include('pyramid_services')
     config.include('pyramid_mailer')
+    config.include('pyramid_authsanity')
+
+    # Register the Authorization Header Source
+    config.register_service_factory(
+        HeaderAuthSourceInitializer(
+            settings['usingnamespace.secret.auth'],
+        ),
+        iface=IAuthSourceService
+    )
+    config.set_authorization_policy(ACLAuthorizationPolicy())
+
     config.include('..models.meta')
 
     def is_api(request):
