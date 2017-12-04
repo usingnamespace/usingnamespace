@@ -242,8 +242,8 @@ class EntryAuthors(Base):
 class Tag(Base):
     __table__ = Table(
         'tags', Base.metadata,
-        Column('id', UUID(as_uuid=True), server_default=text("gen_random_uuid()"), primary_key=True, index=True),
         Column('tag', String(50), index=True, unique=True),
+        Column('id', UUID(as_uuid=True), server_default=text("gen_random_uuid()"), index=True, unique=True),
         Column('description', Text),
         Column('site_id', ForeignKey('sites.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
     )
