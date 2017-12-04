@@ -71,7 +71,7 @@ class PublishedDateTime(MutableComposite):
         if year is not None and month is not None and day is not None:
             try:
                 datetime.date(year, month, day)
-                if time is not None:
+                if time is not None and not isinstance(time, datetime.time):
                     datetime.time(time)
             except:
                 raise
