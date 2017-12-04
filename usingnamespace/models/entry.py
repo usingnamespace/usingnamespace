@@ -246,6 +246,8 @@ class Tag(Base):
         Column('tag', String(50)),
         Column('description', Text),
         Column('site_id', ForeignKey('sites.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False, index=True),
+
+        PrimaryKeyConstraint('tag', 'site_id')
     )
 
 
