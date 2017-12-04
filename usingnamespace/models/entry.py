@@ -250,6 +250,8 @@ class Tag(Base):
         PrimaryKeyConstraint('tag', 'site_id')
     )
 
+    site = relationship("Site", backref=backref("tags", lazy="dynamic"))
+
 
 class RevisionTags(Base):
     __table__ = Table(
